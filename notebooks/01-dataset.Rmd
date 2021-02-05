@@ -136,3 +136,8 @@ Likewise, we might divide disease symptoms into "none", "mild", "severe", and "c
 Categorical data is often *coded*. This means that the categories are assigned numbers as labels. Each discrete category gets a different number (a bit like the Dewey decimal system in a library, or IP addresses on the internet). The numbers don't necessarily relate to the size, strength, or superiority of a category, but are just convenient ways of representing different things in a table.
 
 That said, by convention we often take `1` implicitly to mean "true" or "present", and `0` to mean "false" or "absent".
+
+<div id="questions">
+1. What kind of data is in the `iris` dataset?
+2. What kind of data are variables `pregnancies`, `BMI`, and `class` in the `pima` dataset?
+</div>
