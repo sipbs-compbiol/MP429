@@ -1,0 +1,68 @@
+---
+title: "What is a Dataset?"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    number_sections: true
+    css: "../assets/css/style.css"
+    theme: lumen
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("DT")
+library("readr")
+```
+
+# What is a dataset?
+
+It might be an unhelpful definition, but a dataset is a set of data.
+
+Data comes in many forms, but in science we want our data to be well-organised. To organise our data, we typically collect it into *tables* (in the `R` language, these are referred to as `dataframes`, you may also see them called *matrices*). These are two-dimensional data structures, with *rows* and *columns*, and this allows us to deal with two important and distinct concepts about data: *observations* and *variables* (which may also referred to as *features*, or *measurements*)
+
+## Observations
+
+An *observation* is the act of collecting one or more *measurements* of, or from, an "experimental unit." What constitutes an experimental unit depends on the nature of the experiment. For example, if you measured the [BMI]() of each patient in a GP surgery, the experimental unit would be the patient (and the *measurement* would be their BMI). On the other hand, if you were tracking the concentration of a compound in blood samples taken from a single patient over a period of time, each blood sample would be an experimental unit.
+
+## Variables, Features and Measurements
+
+In an experiment, we measure properties of each "experimental unit." The things that are measured are usually referred to as *variables*, or *features*. In the first example above, the BMI would be termed a *variable*; in the second example, the compound concentration would be called a *variable*.
+
+The terms *variable*, *feature* and *measurement* may often be used interchangeably, but they are sometimes used to imply slightly different things:
+
+- *variable*:
+  - a property that varies across the experimental units
+- *feature*:
+  - (i) a property that varies across the experimental units, but is expected to be constant for each of the experimental units (like eye colour)
+  - (ii) a generic term for a *variable*
+- *measurement*:
+  - (i) a generic term for a *variable*
+  - (ii) the actual value that was measured
+  
+The use of these terms is not always consistent in the literature, and can sometimes be confusing.
+
+## Data Tables
+
+By convention, we represent data in *tables* so that *rows* represent *observations*, and *columns* represent *variables*. The interactive widgets below show some example datasets.
+
+### The `iris` dataset
+
+```{r iris_table, echo=FALSE}
+datatable(iris)
+```
+
+### The Pima Indians Diabetes Dataset
+
+```{r pima_table, echo=FALSE}
+pima = read_csv("../assets/data/pima/pima-indians-diabetes.csv", col_names=c("pregnancies", "conc_Glc", "diastolic", "skin_fold", "insulin", "BMI", "diabetes_pedigree", "age", "class"), col_types="iiiiiddif")
+datatable(pima)
+```
+
+<div id="questions">
+1. How many observations are there in the `pima` dataset?
+2. How many variables are there in the `iris` dataset?
+</div>

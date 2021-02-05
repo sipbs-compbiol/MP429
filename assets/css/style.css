@@ -1,0 +1,31 @@
+.fluid-row {
+    background-image: url(../images/science_logo_400x400.jpg);
+    background-position: right;
+    background-repeat: no-repeat, no-repeat;
+    background-size: contain;
+
+}
+
+#questions {
+    background: lightgreen;
+    color: black;
+}
+#questions:before {
+    font-weight: bold;
+    background-image: url(../images/question-svgrepo-com.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: left;
+    content: "Questions";
+    padding-left: 25px;
+}
+#questions h1, h2, h3, h4 {
+    margin-left: 15px;
+}
+#questions ol {
+    padding: 10px
+}
+#questions ol li {
+    background: #9cf79c;
+    padding: 5px; 
+    margin-left: 35px;
+}
