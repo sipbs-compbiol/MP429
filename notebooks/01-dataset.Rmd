@@ -26,7 +26,9 @@ Data comes in many forms, but in science we want our data to be well-organised. 
 
 ## Observations
 
-An *observation* is the act of collecting one or more *measurements* of, or from, an "experimental unit." What constitutes an experimental unit depends on the nature of the experiment. For example, if you measured the [BMI]() of each patient in a GP surgery, the experimental unit would be the patient (and the *measurement* would be their BMI). On the other hand, if you were tracking the concentration of a compound in blood samples taken from a single patient over a period of time, each blood sample would be an experimental unit.
+An *observation* is the act of collecting one or more *measurements* of, or from, an "experimental unit." 
+
+What constitutes an experimental unit depends on the nature of the experiment. For example, if you measured the [BMI]() of each patient in a GP surgery, the experimental unit would be the patient (and the *measurement* would be their BMI). On the other hand, if you were tracking the concentration of a compound in blood samples taken from a single patient over a period of time, each blood sample would be an experimental unit.
 
 ## Variables, Features and Measurements
 
