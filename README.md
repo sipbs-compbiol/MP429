@@ -34,3 +34,9 @@ and these can be installed from `RStudio` by opening the script and clicking on 
 ```bash
 Rscript install.R
 ```
+
+## Notebook HTML
+
+The current versions of the notebook HTML pages are linked below, for convenience
+
+- [1. What is a Dataset?](notebooks/01-dataset.html)
