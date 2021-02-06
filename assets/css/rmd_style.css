@@ -9,6 +9,9 @@ blockquote {
 .caption {
     background-color: whitesmoke;
 }
+.caption i {
+    font-style: italic;
+}
 
 .fluid-row {
     background-image: url(../images/science_logo_400x400.jpg);

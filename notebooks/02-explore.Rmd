@@ -1,0 +1,146 @@
+---
+title: "Exploring An Interesting Dataset"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    number_sections: true
+    css: "../assets/css/rmd_style.css"
+    theme: lumen
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library("DT")
+library("GGally")
+library("ggplot2")
+library("ggpubr")
+library("readr")
+
+gvhd = read_delim("../assets/data/gvhd.dat", delim="\t",
+                  col_names = c("patient", "time", "recipient_m_f", "recipient_age",
+                                "donor_age", "type", "donor_m_f_preg", "index", "gvhd"),
+                  col_types="iifiiffdf",
+                  skip=1)
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
+```
+
+# Introduction
+
+<div id="summary">
+</div>
+
+# The Dataset
+
+This notebook explores a dataset representing a study of bone marrow transplantation in leukaemia patients, published in:
+
+> Bagot, M., Mary, J.‐Y., Heslan, M., Kuentz, M., Cordonnier, C., Vernant, J.‐P., Dubertret, L. and Levy, J.‐P. (1988), The mixed epidermal cell lymphocyte‐reaction is the most predictive factor of acute graft‐versus‐host disease in bone marrow graft recipients.* British Journal of Haematology*, 70: 403-409. [https://doi.org/10.1111/j.1365-2141.1988.tb02508.x](https://doi.org/10.1111/j.1365-2141.1988.tb02508.x)
+
+The data describes outcomes for 37 patients who received non-depleted allogenic bone marrow transplants from HLA-identical sibling donors, as treatment for their disease. Unfortunately, Graft-versus-Host-Disease (GvHD) is a significant cause of morbidity and mortality in such patients. The published study aimed to identify key risk factors for developing GvHD.
+
+The dataset describes 26 individuals who did not develop GvHD, and 17 individuals who did develop GvHD. The variables measured were:
+
+- `patient`: a unique index number denoting an individual patient; this is not strictly a variable, but an identifier
+- `recipient_m_f`: coded `0` for male; `1` for female
+- `recipient_age`: the age of the recipient in years (numerical, continuous)
+- `donor_m_f_preg`: coded `0` for male; `1` for female (never been pregnant); `2` for female (at least one pregnancy) (categorical, not ordered)
+- `donor_age`: the age of the donor in years (numerical, continuous)
+- `type`: coded `1` for acute myeloid leukaemia; `2` for acute lymphocytic leukaemia; `3` for chronic myeloid leukaemia (categorical, not ordered)
+- `index`: a ratio of two clinical measurements: MECLR/MLR (the details are not important, here) (numerical, continuous)
+- `gvhd`: coded `1` if the patient developed GvHD, `0` if they did not (categorical, not ordered)
+- `time`: the number of days until the clinical outcome (death or survival) was measured (numerical, discrete)
+
+```{r gvhd-data, echo=FALSE}
+datatable(gvhd,
+          caption="Table 1: Characteristics of the study population from an investigation of causes of GvHD risk post-bone marrow transplantation. Adapted from Bagot et al. (1988).")
+```
+
+The *response variable* is `gvhd`, representing the development of GvHD.
+
+Six variables: `patient`, `recipient_sex`, `recipient_age`, `donor_m_f_preg`, `donor_age`, `type`, and `index` are *explanatory variables*. An aim of the study was to understand whether and how these variables might be influential for the development of GvHD. Additionally, as all six of these variables are available for any individual prior to bone marrow transplant, the study aimed also to develop a predictive model for whether a patient might develop GvHD.
+
+This dataset can inform both *understanding* and *prediction* questions.
+
+# Visualisation
+
+The first step in exploring any dataset is often to visualise it. Graphing a scatterplot for two variables can show us whether there appears to be a relationship between their values. For example, graphing recipient age against donor age shows a clear relationship where donor age increases with recipient age.
+
+```{r scatter-age, echo=FALSE, fig.cap="Scatter plot of recipient age against donor age."}
+p = ggplot(gvhd, aes(x=donor_age, y=recipient_age))
+p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+```
+
+This is to be expected, as the donor and recipient are matched siblings, who are likely to be of similar age.
+
+### Scatterplots are not always useful for non-numerical data
+
+Scatterplots can be helpful when visualising continuous (and, sometimes, discrete) numerical data. The plot of recipient age against donor age above showed us an interesting relationship. However, the scatter plot of the response variable `gvhd` (which is a binary categorical variable) against recipient age is not so useful:
+
+```{r scatter-gvhd-recip, echo=FALSE, fig.cap="Scatter plot of GvHD outcome against recipient age."}
+p = ggplot(gvhd, aes(x=recipient_age, y=gvhd))
+p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+```
+
+It is generally the case for categorical data that scatterplots do not show relationships well. However it appears that here there is a slight tendency for younger recipients (under 35) not to develop GvHD, but that those who develop GvHD are spread out across a wider range of ages.
+
+### Scatterplots may overplot data
+
+A potential disadvantage of scatterplots is that two or more datapoints with the same or similar values may be plotted in such a way that they appear to be only a single point. For instance, the plot of `donor_m_f_preg` against `type` looks like it represents only nine datapoints, instead of 37.
+
+As a result, visual interpretations of plots can be misleading, due to the false underrepresentation of datapoints having similar values.
+
+### Spurious correlations can arise from data organisation
+
+When interpreting a data set, we need to understand it well. That means understanding the variables, how the measurements are acquired, and what they mean. But it also means understanding the processing of that data.
+
+The pairs plot above includes pairwise correlation coefficients, with measures of statistical significance. For instance, there is apparently a very strong relationship between `gvhd` and `patient` (r=0.863 in the pairs plot). However, this is purely an artefact of the data preparation. Here, each patient was allocated a patient number *after* the patient data was ordered to place those without GvHD at the top of the table, and those who developed GvHD at the bottom.
+
+In fact, the patient data is not really a variable at all, but an identifier. If we did not understand the dataset like we do, it might be tempting to interpret the `patient` variable as being informative.
+
+## Comparing categorical outcomes
+
+We saw above that scatterplots were not very useful for visualising the relationship between a *categorical* response variable and numerical *explanatory* variables.
+
+There are several other approaches that handle this situation in a more useful way. All of these approaches attempt to represent the data for each response category as a separate distribution of datapoints. This then allows for comparison of the distributions to suggest a difference (or not) in the relationship of an explanatory variable to each outcome.
+
+This is one of the ways in which we can overcome the overplotting problem described above.
+
+### Boxplots
+
+Boxplots, which describe the mean, *interquartiles* and range of data, are a common way to represent the relationship between a categorical response variable, and a numerical explanatory variable. For instance, we can use one to improve the graph of the relationship between recipient age and GvHD.
+
+```{r box-gvhd-recip, echo=FALSE, fig.cap="Boxplot of GvHD outcome against recipient age.", fig.height=2}
+p = ggplot(gvhd, aes(y=recipient_age, x=gvhd, group=gvhd, fill=gvhd)) + coord_flip()
+p + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+```
+
+It is much clearer from this boxplot than it was from the scatterplot that there might be some relationship between GvHD and recipient age.
+
+```{r box-gvhd-donor-idx, echo=FALSE, fig.cap="Boxplot of GvHD outcome against (a) donor age (b) MECLR/MLR index.", fig.height=4}
+p1 = ggplot(gvhd, aes(y=donor_age, x=gvhd, group=gvhd, fill=gvhd)) + coord_flip()
+p1 = p1 + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+
+p2 = ggplot(gvhd, aes(y=index, x=gvhd, group=gvhd, fill=gvhd)) + coord_flip()
+p2 = p2 + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+
+ggarrange(p1, p2, labels=c("(a)", "(b)"), ncol=1, nrow=2)
+```
+
+We can see from this representation that GvHD does appear to have some dependency on the explanatory variables of donor and recipient age, and MECLR/MLR index.
+
+## Pairs plot
+
+The `R` language is set up to handle data well, and we can specify what type of data is contained in a particular variable. This information can then be used by packages like `GGally` to ensure we get an appropriate graphical output.
+
+Here, using the `ggpairs` function from `GGally`, we can generate scatterplots, boxplots, histograms, density plots and correlations for all pairs of variables, simultaneously, in a *pairs plot*.
+
+```{r scatter-pairs, echo=FALSE, fig.cap="Pairs plot of `gvhd` data, providing an overview of relationships between variables.", fig.width=10, fig.height=10}
+ggpairs(gvhd) + theme(plot.background = element_rect(fill = figbg, color = figbg))
+```
+
+This gives us a rich visual overview of the relationships in our dataset.

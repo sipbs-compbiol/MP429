@@ -47,7 +47,7 @@ Often, one of the measurements is treated as a *response variable* - an *outcome
 
 The measured variables that could explain the behaviour of the response variable (i.e. those variables on which the dependent variable might depend) are called *explanatory variables*. For instance, the pupil dilation in our example might depend on: the amount of drug given; the sex of the patient; the age of the patient; and so on. Explanatory variables in an experiment might be measured (i.e. properties of the individual that are observed, like patient sex) or assigned (e.g. giving a drug or a placebo to different groups of individuals).
 
-```{r plant-growth, results="asis", echo=FALSE, fig.align="center"}
+```{r plant-growth, echo=FALSE}
 datatable(PlantGrowth, width=400,
           caption="Table 1: Data from an experiment assessing the effect of two treatment conditions on yield. `weight` is the response variable, `group` is the (assigned) explanatory variable.")
 ```
