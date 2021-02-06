@@ -1,0 +1,32 @@
+---
+title: "Why Statistics?"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    number_sections: true
+    css: "../assets/css/rmd_style.css"
+    theme: lumen
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+<div id="summary">
+- Statistics is a science that aims to solve researchers' problems by analysing data
+- This workshop aims to help you critically interpret literature, but does not focus on theory or mathematical formalism
+</div>
+
+# Why Do We Do Statistics?
+
+*Statistics* is a science that aims to solve problems mathematically, by analysing *data*. Statistics is applicable to any field that collects data, including medicine, biology, chemistry, engineering, and social sciences. The nature of data can be complex, and so there are always some practical questions that can only be answered by the application of statistical methods to that data.
+
+## Why Are We Doing This Workshop
+
+The emphasis of this workshop is to introduce common statistical tools, and help you develop an insight into how they work and when they should, and ought not, to be applied. This is not a formal mathematical presentation of statistical methods, or statistical *theory*. Rather, this workshop is a primer that describes how and why particular statistical methods are applied to answer research questions, and how to critically interpret their application and interpretation in the literature.

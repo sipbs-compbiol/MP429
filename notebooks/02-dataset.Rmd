@@ -8,7 +8,7 @@ output:
     toc_float:
       toc_collapsed: false
     number_sections: true
-    css: "../assets/css/style.css"
+    css: "../assets/css/rmd_style.css"
     theme: lumen
 ---
 
@@ -17,6 +17,15 @@ knitr::opts_chunk$set(echo = TRUE)
 library("DT")
 library("readr")
 ```
+
+# Introduction
+
+<div id="summary">
+- Data is typically collected into tables where rows are observations, and columns are variables
+- Variables may be numerical or categorical
+- Numerical variables may be continuous or discrete
+- Categorical variables may have an implicit ordering ("ordinal"), or no implicit ordering ("factors")
+</div>
 
 # What is a dataset?
 
@@ -119,7 +128,7 @@ It can be a warning sign that something is not right with an analysis if a calcu
 
 But, as with numerical data, it's a little more complicated than that.
 
-Sometimes, as with *continuous numerical data*, the category is a property of the experimental unit that falls into one or more groups, such as eye colour, or nationality, where there is no implicit ranking or ordering (blue eyes are not "more than" green eyes, for instance).
+Sometimes, as with *continuous numerical data*, the category is a property of the experimental unit that falls into one or more groups, such as eye colour, or nationality, where there is no implicit ranking or ordering (blue eyes are not "more than" green eyes, for instance). These are often referred to as *factors*.
 
 Other categories however may have an implicit ranking, and these are called *ordinal data*.
 

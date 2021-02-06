@@ -48,3 +48,17 @@ blockquote {
     content: "Note:";
     padding-left: 25px;
 }
+
+#summary {
+    background: cornsilk;
+    color: #886715;
+    padding: 10px;
+}
+#summary:before {
+    font-weight: bold;
+    background-image: url(../images/summary.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: left;
+    content: "Summary:";
+    padding-left: 25px;
+}
