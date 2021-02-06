@@ -21,6 +21,13 @@ knitr::opts_chunk$set(echo = TRUE)
 <div id="summary">
 - Statistics is a science that aims to solve researchers' problems by analysing data
 - This workshop aims to help you critically interpret literature, but does not focus on theory or mathematical formalism
+- The workshop is presented in a flipped style.
+  - You should read through the materials, attempt the exercises and optional interactive sections, and bring questions for discussion in the live online session.
+- You will need to use `RStudio` Desktop, installed on your own computer, for the optional interactive sections
+  - For interactive sections you will be asked to:
+    - decide which methods are appropriate for the given problem
+    - apply the methods
+    - interpret the answers you get
 </div>
 
 # Why Do We Do Statistics?
@@ -30,3 +37,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Why Are We Doing This Workshop
 
 The emphasis of this workshop is to introduce common statistical tools, and help you develop an insight into how they work and when they should, and ought not, to be applied. This is not a formal mathematical presentation of statistical methods, or statistical *theory*. Rather, this workshop is a primer that describes how and why particular statistical methods are applied to answer research questions, and how to critically interpret their application and interpretation in the literature.
+
+Although we will not dive into theory or mathematics, you should gain an understanding that these methods are thoroughly grounded in mathematics and are not applied in an *ad hoc* way.
+
+## What Should You Expect From This Workshop?
+
+The workshop is presented in a *flipped* format. That is, the homework comes *before* the class, and we use an online Zoom session to work though questions and discussions prompted by the material.
+
+This material is broken into notebooks (like this one) which you should read. You should attempt the exercises in each notebook and - optionally - also attempt the interactive sessions. 
+
+The interactive sessions either fall at the end of a notebook, or are standalone notebooks. Both require that you install [`RStudio` Desktop](https://rstudio.com/products/rstudio/download/) - a free IDE (Integrated Development Environment) on your own computer. The implementation of statistical methods is handled almost exclusively by computers, these days, and `R` is the most common environment for statistical analysis in scientific research. Gaining some familiarity with `R` will help your research, and your future employability.
+
+You will not be expected to write your own *code* in `R`, only to understand the methods, decide which are appropriate to answer the questions you are given, apply the methods, and interpret the answers you get.
