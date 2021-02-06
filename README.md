@@ -37,5 +37,5 @@ Rscript install.R
 
 The current versions of the notebook HTML pages are linked below, for convenience
 
-- [1. Why Do We Do Statistics??](notebooks/01-statistics.html)
+- [1. Why Do We Do Statistics?](notebooks/01-statistics.html)
 - [2. What is a Dataset?](notebooks/02-dataset.html)

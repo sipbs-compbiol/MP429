@@ -1,5 +1,5 @@
 ---
-title: "Why Statistics?"
+title: "Why Do We Do Statistics?"
 author: "Leighton Pritchard"
 date: "2021 Presentation"
 output: 
