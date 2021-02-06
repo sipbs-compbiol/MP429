@@ -1,6 +1,6 @@
-<img src="assets/images/science_logo_400x400.jpg" style="width: 150px; float: right;">
-
 # README.md
+
+<img src="assets/images/science_logo_400x400.jpg" style="width: 150px; float: right;">
 
 Welcome to the MP429 repository! This repository contains materials to support the following workshops:
 
