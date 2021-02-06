@@ -2,6 +2,13 @@ blockquote {
     font-size: small;
 }
 
+.figure {
+    background-color: whitesmoke;
+}
+
+.caption {
+    background-color: whitesmoke;
+}
 
 .fluid-row {
     background-image: url(../images/science_logo_400x400.jpg);
@@ -60,5 +67,19 @@ blockquote {
     background-repeat: no-repeat, no-repeat;
     background-position: left;
     content: "Summary:";
+    padding-left: 25px;
+}
+
+#warning {
+    background: mistyrose;
+    color: firebrick;
+    padding: 10px;
+}
+#warning:before {
+    font-weight: bold;
+    background-image: url(../images/caution-icon.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: left;
+    content: "Caution:";
     padding-left: 25px;
 }
