@@ -1,0 +1,51 @@
+---
+title: "plotly_test"
+author: "Leighton Pritchard"
+date: "05/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(plotly)
+```
+
+```{r plot_test}
+df <- data.frame(x = c("1", "2", "3", "4", "5"), 
+                 y = c("1", "1", "1", "1", "1")) 
+
+# create steps for slider
+steps <- list(
+  list(args = list("marker.color", "red"), 
+                    label = "Red", 
+                    method = "restyle", 
+                    value = "1"
+                    ),
+  list(args = list("marker.color", "green"), 
+                    label = "Green", 
+                    method = "restyle", 
+                    value = "2"
+                    ),
+  list(args = list("marker.color", "blue"), 
+                    label = "Blue", 
+                    method = "restyle", 
+                    value = "3"
+                    )
+  )
+
+fig<- df 
+fig <- fig %>% plot_ly(x = ~x, y = ~y,
+          mode = "markers", 
+          marker = list(size = 20,
+                        color = 'green'), 
+          type = "scatter") 
+fig <- fig %>% layout(title = "Basic Slider",
+         sliders = list(
+           list(
+             active = 1, 
+             currentvalue = list(prefix = "Color: "), 
+             pad = list(t = 60), 
+             steps = steps))) 
+
+fig
+```
