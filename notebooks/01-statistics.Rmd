@@ -73,34 +73,36 @@ If you have ever performed a *t*-test, based on the means and standard deviation
 A key concern in statistics is ensuring that the choice of model distribution to represent an experimental dataset is appropriate, and we will spend some time in the workshop notes exploring this.
 
 ```{r model-normal, echo=FALSE, fig.cap="Two hundred measured data values (histogram) and the corresponding Normal distribution model (curve) of those values. The modelled distribution is entirely described by the parameters: mean=10 (µ) and standard deviation=3 (σ). We can see here that the frequency of real data values don't match the curve exactly; the model simplifies our representation of the 'noisy' data. The dashed line represents the mean value of the model, and the dotted lines represents values at +/- one and two standard deviations from the mean."}
-mu = 10
-sd = 3
-breaks = seq(0, 20, by=0.4)
+mu = 10                          # define mean of distribution
+sd = 3                           # define standard deviation of distribution
+breaks = seq(0, 20, by=0.4)      # set up the breakpoints between bars in the histogram
 
-dfm_hist = data.frame(vals=rnorm(200, mean=mu, sd=sd))
+dfm_hist = data.frame(vals=rnorm(200, mean=mu, sd=sd))               # create a data frame
 
-p = ggplot(dfm_hist, aes(x=vals))
-p = p + geom_histogram(aes(y=..density..),
+p = ggplot(dfm_hist, aes(x=vals))                                    # set up the ggplot with data
+p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
                        breaks=breaks,
                        fill="cornflowerblue")
-p = p + stat_function(fun=dnorm, args=list(mean=mu, sd=sd),
+p = p + stat_function(fun=dnorm, args=list(mean=mu, sd=sd),          # add a layer with the Normal curve 
                       geom="line")
-p = p + annotate("segment",
-                 x=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd), xend=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
-                 y=c(0, 0, 0, 0), yend=c(0.2, 0.2, 0.2, 0.2),
-                 colour="goldenrod", size=1, linetype="dotted")
-p = p + annotate("segment",
+p = p + annotate("segment",                                          # show the mean as a dashed line
                  x=mu, xend=mu, y=0, yend=0.2,
                  colour="darkorange1", size=1, linetype="dashed")
-p = p + annotate("text",
+p = p + annotate("segment",                                          # show standard deviations as dotted lines
+                 x=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                 xend=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                 y=c(0, 0, 0, 0), yend=c(0.2, 0.2, 0.2, 0.2),
+                 colour="goldenrod", size=1, linetype="dotted")
+p = p + annotate("text",                                             # annotate the lines
                  x=c(mu-2*sd, mu-sd, mu, mu+sd, mu+2*sd),
                  y=c(0.21, 0.21, 0.21, 0.21, 0.21),
                  colour="darkorange3",
                  label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
-p = p + xlim(mu - 3 * sd, mu + 3 * sd)
-p = p + xlab("measured variable") + ylab("frequency")
-p = p + theme(plot.background = element_rect(fill = figbg, color = figbg))
-p
+p = p + xlim(mu - 3 * sd, mu + 3 * sd)                               # set x-axis limits
+p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p                                                                    # show plot
 ```
 
 
@@ -127,3 +129,40 @@ The interactive sessions either fall at the end of a notebook, or are standalone
 </div>
 
 You will not be expected to write your own *code* in `R`, only to understand the methods, decide which are appropriate to answer any questions you are given, apply the methods, and interpret the answers you get.
+
+# `R` code used in this notebook
+
+The `R` code below plots the Normal distribution from figure 2.1, with a random sampling of 200 "measured" variables from this distribution, using `ggplot2`.
+
+```r
+mu = 10                          # define mean of distribution
+sd = 3                           # define standard deviation of distribution
+breaks = seq(0, 20, by=0.4)      # set up the breakpoints between bars in the histogram
+
+dfm_hist = data.frame(vals=rnorm(200, mean=mu, sd=sd))               # create a data frame
+
+p = ggplot(dfm_hist, aes(x=vals))                                    # set up the ggplot with data
+p = p + geom_histogram(aes(y=..density..),                           # add a histogram layer
+                       breaks=breaks,
+                       fill="cornflowerblue")
+p = p + stat_function(fun=dnorm, args=list(mean=mu, sd=sd),          # add Normal curve layer
+                      geom="line")
+p = p + annotate("segment",                                          # show mean as dashed line
+                 x=mu, xend=mu, y=0, yend=0.2,
+                 colour="darkorange1", size=1, linetype="dashed")
+p = p + annotate("segment",                                          # show std devs as dotted lines
+                 x=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                 xend=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                 y=c(0, 0, 0, 0), yend=c(0.2, 0.2, 0.2, 0.2),
+                 colour="goldenrod", size=1, linetype="dotted")
+p = p + annotate("text",                                             # annotate the lines
+                 x=c(mu-2*sd, mu-sd, mu, mu+sd, mu+2*sd),
+                 y=c(0.21, 0.21, 0.21, 0.21, 0.21),
+                 colour="darkorange3",
+                 label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
+p = p + xlim(mu - 3 * sd, mu + 3 * sd)                               # set x-axis limits
+p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p                                                                    # show plot
+```
