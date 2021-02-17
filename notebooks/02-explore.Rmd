@@ -18,6 +18,7 @@ library("DT")
 library("GGally")
 library("ggplot2")
 library("ggpubr")
+library("plotly")
 library("readr")
 
 gvhd = read_delim("../assets/data/gvhd.dat", delim="\t",
@@ -72,7 +73,8 @@ The first step in exploring any dataset is often to visualise it. Graphing a sca
 
 ```{r scatter-age, echo=FALSE, fig.cap="Scatter plot of recipient age against donor age."}
 p = ggplot(gvhd, aes(x=donor_age, y=recipient_age))
-p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+p = p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+ggplotly(p)
 ```
 
 This is to be expected, as the donor and recipient are matched siblings, who are likely to be of similar age.
@@ -83,7 +85,8 @@ Scatterplots can be helpful when visualising continuous (and, sometimes, discret
 
 ```{r scatter-gvhd-recip, echo=FALSE, fig.cap="Scatter plot of GvHD outcome against recipient age."}
 p = ggplot(gvhd, aes(x=recipient_age, y=gvhd))
-p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+p = p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+ggplotly(p)
 ```
 
 It is generally the case for categorical data that scatterplots do not show relationships well. However it appears that here there is a slight tendency for younger recipients (under 35) not to develop GvHD, but that those who develop GvHD are spread out across a wider range of ages.
@@ -116,7 +119,8 @@ Boxplots, which describe the mean, *interquartiles* and range of data, are a com
 
 ```{r box-gvhd-recip, echo=FALSE, fig.cap="Boxplot of GvHD outcome against recipient age.", fig.height=2}
 p = ggplot(gvhd, aes(y=recipient_age, x=gvhd, group=gvhd, fill=gvhd)) + coord_flip()
-p + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+p = p + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+ggplotly(p)
 ```
 
 It is much clearer from this boxplot than it was from the scatterplot that there might be some relationship between GvHD and recipient age.
