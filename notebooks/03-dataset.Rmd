@@ -13,9 +13,13 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library("DT")
+library("GGally")
 library("readr")
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
 ```
 
 # Introduction
@@ -25,13 +29,17 @@ library("readr")
 - Variables may be numerical or categorical
 - Numerical variables may be continuous or discrete
 - Categorical variables may have an implicit ordering ("ordinal"), or no implicit ordering ("factors")
+  - Categorical data is often "coded" into number representations
+- **The kind of data you have should guide your choice of statistical and visualisation approaches.**
 </div>
 
 # What is a dataset?
 
-It might be an unhelpful definition, but a dataset is a set of data.
+It might be an unhelpful definition, but a dataset is just a set of data.
 
-Data comes in many forms, but in science we want our data to be well-organised. To organise our data, we typically collect it into *tables* (in the `R` language, these are referred to as `dataframes`, you may also see them called *matrices*). These are two-dimensional data structures, with *rows* and *columns*, and this allows us to deal with two important and distinct concepts about data: *observations* and *variables* (which may also referred to as *features*, or *measurements*)
+You have already seen an example dataset (`gvhd`) in notebook 2. In this notebook, we will consider features of a dataset that make it useful for scientific analyses, and characteristics of data that will guide your choice of statistical approach.
+
+Data comes in many forms, but in science we nearly always want our data to be well-organised. To organise our data, we typically collect it into *tables* (in the `R` language, these are referred to as `dataframes`, you may also see them called *matrices* or *tables*). These are two-dimensional data structures, with *rows* and *columns*, and this allows us to deal with two important and distinct concepts about data: *observations* and *variables* (variables may also be sreferred to as *features*, or *measurements*)
 
 ## Observations
 
@@ -70,6 +78,15 @@ The `iris` dataset describes morphological variation of the flowers (the lengths
 datatable(iris)
 ```
 
+We can visualise the relationships in the variables with a pairs plot, as we did in notebook 2.
+
+```{r iris-pairs, echo=FALSE, fig.cap="Pairs plot of `iris` data, providing an overview of relationships between variables.", fig.width=10, fig.height=10}
+p = ggpairs(iris)                                             # create pairs plot for all iris data
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour background
+                                             color = figbg))
+p                                                             # show plot
+```
+
 ### The Pima Diabetes Dataset
 
 The `pima` dataset describes a set of females aged at least 21 and having Akimel O'odham (formerly known as Pima Indian) heritage. These are a Native American people living in an area of Central and Southern Arizona. This group have a high rate of diabetes mellitus. The dataset was collected by the National Institute of Diabetes and Digestive and Kidney Diseases (in the US), and has been used as an example dataset for machine learning, e.g. in
@@ -77,24 +94,37 @@ The `pima` dataset describes a set of females aged at least 21 and having Akimel
 > Smith, J.W., Everhart, J.E., Dickson, W.C., Knowler, W.C., & Johannes, R.S. (1988). Using the ADAP learning algorithm to forecast the onset of diabetes mellitus. In *Proceedings of the Symposium on Computer Applications and Medical Care* (pp. 261--265). IEEE Computer Society Press. [Online at PubMedCentral](https://europepmc.org/article/PMC/2245318)
 
 ```{r pima_table, echo=FALSE}
-pima = read_csv("../assets/data/pima/pima-indians-diabetes.csv", col_names=c("pregnancies", "conc_Glc", "diastolic", "skin_fold", "insulin", "BMI", "diabetes_pedigree", "age", "class"), col_types="iiiiiddif")
+pima = read_csv("../assets/data/pima/pima-indians-diabetes.csv",                    # Load data from file
+                col_names=c("pregnancies", "conc_Glc", "diastolic", "skin_fold",
+                            "insulin", "BMI", "diabetes_pedigree", "age", "class"),
+                col_types="iiiiiddif")
 datatable(pima)
+```
+
+Again, we visualise relationships with a pairs plot,
+
+```{r pima-pairs, echo=FALSE, fig.cap="Pairs plot of `pima` data, providing an overview of relationships between variables.", fig.width=10, fig.height=10}
+p = ggpairs(pima)                                             # create pairs plot for all pima data
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour background
+                                             color = figbg))
+p                                                             # show plot
 ```
 
 <div id="questions">
 1. How many observations are there in the `pima` dataset?
 2. How many variables are there in the `iris` dataset?
+3. Do the pairs plots appear to suggest any potential problems with either dataset?
 </div>
 
 # Types of variable
 
 When analysing an experiment, especially when critically reviewing someone else's work, it is very important to understand the dataset. The type and quantity of data determine what kinds of analyses and interpretations are valid, and how confident we should be in our analysis results.
 
-There are two main categories of data: numerical and categorical
+There are two main types of data: numerical and categorical
 
 ## Numerical Data
 
-Numerical data is, unsurprisingly, data that is numbers. Values like 3.141, 0, -7, $10^8$ and so on are all numbers, and could be found in numerical data.
+Numerical data is, unsurprisingly, data that can reasonably be represented as numbers. Values like 3.141, 0, -7, $10^8$ and so on are all numbers, and could be found in numerical data.
 
 But it's a little more complicated than that.
 
@@ -104,11 +134,13 @@ This might be the first kind of numerical data that comes to mind. Measurements 
 
 Although our ability to measure things is limited in practice (e.g. a 30cm ruler might not be able to measure a distance smaller than 1mm accurately), it's the ability of the *property* to take on one of these values that matters. For instance, with a kitchen timer we might not be able to time a 100m sprint more accurately than the nearest second; but the runners could finish at any time between consecutive ticks of the clock (e.g. at 14.461723884756325347s exactly). 
 
+<div id="note">
 It is not our ability to measure precisely that makes the data *continuous*, it is the nature of the *thing being measured*.
+</div>
 
 ### Discrete Data
 
-Not all numerical data is continuous. For instance, count data (e.g. bouncers ticking off how many people are in a pub or club, for fire safety) is not continuous: you can only count whole number, *integer* values. We call this kind of numerical data *discrete numerical data*. 
+Not all numerical data is continuous. For instance, count data (e.g. security staff ticking off how many people are in a pub, club or concert hall, for fire safety) is not continuous: you can only count whole number, *integer* values. We call this kind of numerical data *discrete numerical data*. 
 
 With discrete data, every state of the property is different and separate; intermediate values are not allowed. Because the allowed values are restricted, we often treat this data differently than continuous numerical data, and interpret analyses differently.
 
@@ -116,10 +148,10 @@ For example, the difference between discrete and continuous data is why it's som
 
 $$\textrm{average number of eyes} = \frac{\textrm{total number of eyes}}{\textrm{total number of people}}$$
 
-may give an answer somewhere between 0 and 2. Most people you will meet ("the average person") are likely to have two eyes, so this seems a little odd.
+may give an answer somewhere between 0 and 2. Most people you will meet ("the average person") are likely to have exactly two eyes, so this seems a little strange.
 
 <div id="note">
-It can be a warning sign that something is not right with an analysis if a calculation gives apparently nonsensical values, such as fractional values for things that can only be whole numbers.
+It can be a warning sign that something is not right with an analysis if a calculation gives apparently nonsensical values, such as fractional values for entities that can only be whole numbers.
 </div>
 
 ## Categorical Data
@@ -128,25 +160,59 @@ It can be a warning sign that something is not right with an analysis if a calcu
 
 But, as with numerical data, it's a little more complicated than that.
 
-Sometimes, as with *continuous numerical data*, the category is a property of the experimental unit that falls into one or more groups, such as eye colour, or nationality, where there is no implicit ranking or ordering (blue eyes are not "more than" green eyes, for instance). These are often referred to as *factors*.
+Sometimes, as with *continuous numerical data*, the category is a property of the experimental unit that falls into one or more groups, such as eye colour, or nationality. Here there is no implicit ranking or ordering (blue eyes are not "more than" green eyes, for instance). These are often referred to as *factors*.
 
-Other categories however may have an implicit ranking, and these are called *ordinal data*.
+Other categories however may have an implicit ranking - like "large", "medium", and "small" drinks at a fast food outlet - and these are called *ordinal data*.
 
 ### Ordinal Data
 
-In a competition, individuals might finish first, second, third and so on. These rankings are often treated as numbers, but they are in fact *categories* and this is categorical data. We might consider that those who finish first are "better" or "more" than those who finish second or third. There is a natural ordering to these categories, which we want to consider in our analyses - but we can't rightly treat `1`, `2` and `3` as the whole numbers $1$, $2$ and $3$ - they are instead more like labels.
+In a competition, individuals might finish first, second, third and so on. These rankings are often treated as numbers, but they are in fact *categories*, and they are categorical data. We might consider that those who finish first are "better" or "more" in some way than those who finish second or third. There is a natural ordering to these categories, which we want to consider in our analyses - but we can't rightly treat `1`, `2` and `3` as the whole numbers $1$, $2$ and $3$ - they are instead more like labels.
 
-Similarly, we often divide populations into age ranges, rather than using an accurate age. These ranges are categories too, and there is an implicit ordering: "70+" is *older than* "55-70" is *older than* "45-55". Here, the categories are ordered, but they are not the same size, and we can't treat them as numeric ranges.
+Similarly, we often divide populations into age ranges, rather than using an accurate age. These ranges are categories too, and there is an implicit ordering: "70+" is *older than* "55-70" is *older than* "45-55". Here, the categories are ordered, but they are not the same size, and we can't treat them as numerical values without taking more care.
 
-Likewise, we might divide disease symptoms into "none", "mild", "severe", and "critical"; or even just into *present* and *absent* Again, there is an ordering, but there is no natural numerical representation.
+Likewise, we might divide disease symptoms into "none", "mild", "severe", and "critical"; or even just into *present* and *absent*. Again, there is an ordering of sorts, but there is no natural numerical representation.
 
 ### Coding
 
 Categorical data is often *coded*. This means that the categories are assigned numbers as labels. Each discrete category gets a different number (a bit like the Dewey decimal system in a library, or IP addresses on the internet). The numbers don't necessarily relate to the size, strength, or superiority of a category, but are just convenient ways of representing different things in a table.
 
-That said, by convention we often take `1` implicitly to mean "true" or "present", and `0` to mean "false" or "absent".
+By convention we often take `1` implicitly to mean "true" or "present", and `0` to mean "false" or "absent".
 
 <div id="questions">
 1. What kind of data is in the `iris` dataset?
 2. What kind of data are variables `pregnancies`, `BMI`, and `class` in the `pima` dataset?
 </div>
+
+# `R` code used in this notebook
+
+## `iris` data
+
+The `iris` data exists as a variable in `R`, and we visualise it with the `ggpairs()` function from the `GGally` package.
+
+```r
+p = ggpairs(iris)                           # create pairs plot for all iris data
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour background
+                                             color = figbg))
+p  
+```
+
+## `pima` data
+
+The `pima` dataset is visualised in the same way, but must be loaded in from file, first. The data is read in using the `read_csv()` function from the `readr` package, defining useful column/field names for the variables, and specifying the data types for each variable in the `col_types` string:
+
+- `i`: integer (numerical)
+- `f`: factor (categorical)
+- `d`: double (numerical, continuous)
+
+```r
+pima = read_csv("../assets/data/pima/pima-indians-diabetes.csv",
+                col_names=c("pregnancies", "conc_Glc",      # Load data from file
+                "diastolic", "skin_fold",
+                "insulin", "BMI", "diabetes_pedigree",
+                "age", "class"),
+                col_types="iiiiiddif")
+p = ggpairs(pima)                                             # create pairs plot
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour background
+                                             color = figbg))
+p                                                             # show plot
+```
