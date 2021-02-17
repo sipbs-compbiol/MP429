@@ -1,4 +1,8 @@
+# Exclude R project hidden files
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# Exclude test R MArkdown documents
+test_Rmd/
