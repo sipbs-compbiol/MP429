@@ -18,7 +18,6 @@ library("DT")
 library("GGally")
 library("ggplot2")
 library("ggpubr")
-library("plotly")
 library("readr")
 
 gvhd = read_delim("../assets/data/gvhd.dat", delim="\t",
@@ -34,6 +33,13 @@ figbg = "whitesmoke"
 # Introduction
 
 <div id="summary">
+- We look at an example dataset from a clinical study
+  - The study aimed to identify key risk factors for developing Graft-versus-Host-Disease (GvHD)
+  - The *response variable* is `gvhd` (development or non-development of GvHD)
+  - The study examined the influence of six *explanatory variables*
+- Scatterplots are useful to compare two continuous numerical variables
+- Boxplots are useful to compare the numerical outputs for two categorical explanatory variables
+- Pairs plots give a quick visual overview of the data
 </div>
 
 # The Dataset
@@ -46,13 +52,13 @@ The data describes outcomes for 37 patients who received non-depleted allogenic 
 
 The dataset describes 26 individuals who did not develop GvHD, and 17 individuals who did develop GvHD. The variables measured were:
 
-- `patient`: a unique index number denoting an individual patient; this is not strictly a variable, but an identifier
+- `patient`: a unique index number denoting an individual patient; this is not strictly a variable, but an identifier or *index*
 - `recipient_m_f`: coded `0` for male; `1` for female
 - `recipient_age`: the age of the recipient in years (numerical, continuous)
 - `donor_m_f_preg`: coded `0` for male; `1` for female (never been pregnant); `2` for female (at least one pregnancy) (categorical, not ordered)
 - `donor_age`: the age of the donor in years (numerical, continuous)
 - `type`: coded `1` for acute myeloid leukaemia; `2` for acute lymphocytic leukaemia; `3` for chronic myeloid leukaemia (categorical, not ordered)
-- `index`: a ratio of two clinical measurements: MECLR/MLR (the details are not important, here) (numerical, continuous)
+- `index`: a ratio of two clinical measurements: MECLR/MLR (the details of this are not important for us) (numerical, continuous)
 - `gvhd`: coded `1` if the patient developed GvHD, `0` if they did not (categorical, not ordered)
 - `time`: the number of days until the clinical outcome (death or survival) was measured (numerical, discrete)
 
@@ -69,82 +75,193 @@ This dataset can inform both *understanding* and *prediction* questions.
 
 # Visualisation
 
-The first step in exploring any dataset is often to visualise it. Graphing a scatterplot for two variables can show us whether there appears to be a relationship between their values. For example, graphing recipient age against donor age shows a clear relationship where donor age increases with recipient age.
+The first step in exploring any dataset is often to visualise it. Graphing a scatterplot for two variables can show us whether there appears to be a relationship between their values. For example, graphing `recipient_age` against `donor_age` shows a clear relationship where donor age increases with recipient age.
 
 ```{r scatter-age, echo=FALSE, fig.cap="Scatter plot of recipient age against donor age."}
-p = ggplot(gvhd, aes(x=donor_age, y=recipient_age))
-p = p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
-ggplotly(p)
+p = ggplot(gvhd, aes(x=donor_age, y=recipient_age))           # create plot with gvhd data
+p = p + geom_point()                                          # add scatterplot
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour plot background
+                                             color = figbg))
+p                                                             # show plot
 ```
 
-This is to be expected, as the donor and recipient are matched siblings, who are likely to be of similar age.
+This is probably to be expected, as the donor and recipient are matched siblings, and are likely to be of similar age.
 
 ### Scatterplots are not always useful for non-numerical data
 
-Scatterplots can be helpful when visualising continuous (and, sometimes, discrete) numerical data. The plot of recipient age against donor age above showed us an interesting relationship. However, the scatter plot of the response variable `gvhd` (which is a binary categorical variable) against recipient age is not so useful:
+Scatterplots can be helpful when visualising continuous (and, sometimes, discrete) numerical data. The plot of recipient age against donor age above showed us an interesting relationship. However, we this study is interested in a *categorical* response variable, that only takes values `0` or `1`.
+
+A scatter plot of this response variable `gvhd` (which is a binary categorical variable) against recipient age is not so useful:
 
 ```{r scatter-gvhd-recip, echo=FALSE, fig.cap="Scatter plot of GvHD outcome against recipient age."}
-p = ggplot(gvhd, aes(x=recipient_age, y=gvhd))
-p = p + geom_point() + theme(plot.background = element_rect(fill = figbg, color = figbg))
-ggplotly(p)
+p = ggplot(gvhd, aes(x=recipient_age, y=gvhd))                # create plot with gvhd data
+p = p + geom_point()                                          # add scatterplot
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour plot background
+                                             color = figbg))
+p                                                             # show plot
 ```
 
-It is generally the case for categorical data that scatterplots do not show relationships well. However it appears that here there is a slight tendency for younger recipients (under 35) not to develop GvHD, but that those who develop GvHD are spread out across a wider range of ages.
+It is generally the case for categorical data that scatterplots do not show relationships well. However you might be able to tell from this graph that there is a slight tendency for younger recipients (under 35) not to develop GvHD.
 
-### Scatterplots may overplot data
+### Scatterplots may overplot datapoints
 
-A potential disadvantage of scatterplots is that two or more datapoints with the same or similar values may be plotted in such a way that they appear to be only a single point. For instance, the plot of `donor_m_f_preg` against `type` looks like it represents only nine datapoints, instead of 37.
+A potential disadvantage of scatterplots is that two or more datapoints with the same or similar values may be plotted in such a way that they appear to be only a single point. In figure 2, several individuals with the same age are found in each of the `gvhd` outcomes, and their corresponding points are overplotted. We cannot tell whether there are many people, or only one, associated with each of the points in the graph.
 
-As a result, visual interpretations of plots can be misleading, due to the false underrepresentation of datapoints having similar values.
-
-### Spurious correlations can arise from data organisation
-
-When interpreting a data set, we need to understand it well. That means understanding the variables, how the measurements are acquired, and what they mean. But it also means understanding the processing of that data.
-
-The pairs plot above includes pairwise correlation coefficients, with measures of statistical significance. For instance, there is apparently a very strong relationship between `gvhd` and `patient` (r=0.863 in the pairs plot). However, this is purely an artefact of the data preparation. Here, each patient was allocated a patient number *after* the patient data was ordered to place those without GvHD at the top of the table, and those who developed GvHD at the bottom.
-
-In fact, the patient data is not really a variable at all, but an identifier. If we did not understand the dataset like we do, it might be tempting to interpret the `patient` variable as being informative.
+As a result, visual interpretations of plots can sometimes be misleading, due to the false underrepresentation of datapoints that have similar values.
 
 ## Comparing categorical outcomes
 
-We saw above that scatterplots were not very useful for visualising the relationship between a *categorical* response variable and numerical *explanatory* variables.
+We saw above that scatterplots are not always very useful for visualising the relationship between a *categorical* response variable and numerical *explanatory* variables.
 
-There are several other approaches that handle this situation in a more useful way. All of these approaches attempt to represent the data for each response category as a separate distribution of datapoints. This then allows for comparison of the distributions to suggest a difference (or not) in the relationship of an explanatory variable to each outcome.
+Other visualisation types can represent this data in a more helpful way by representing the data for each outcome category as a separate distribution of datapoints. This then allows for comparison of the distributions to see if there is a difference in the relationship of the explanatory variable with each of the outcomes.
 
-This is one of the ways in which we can overcome the overplotting problem described above.
+The distribution summarises all the datapoints, and helps us overcome the overplotting problem described above.
 
 ### Boxplots
 
 Boxplots, which describe the mean, *interquartiles* and range of data, are a common way to represent the relationship between a categorical response variable, and a numerical explanatory variable. For instance, we can use one to improve the graph of the relationship between recipient age and GvHD.
 
 ```{r box-gvhd-recip, echo=FALSE, fig.cap="Boxplot of GvHD outcome against recipient age.", fig.height=2}
-p = ggplot(gvhd, aes(y=recipient_age, x=gvhd, group=gvhd, fill=gvhd)) + coord_flip()
-p = p + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
-ggplotly(p)
+p = ggplot(gvhd, aes(y=recipient_age, x=gvhd,                  # set up plot with gvhd data
+                     group=gvhd, fill=gvhd)) 
+p = p + coord_flip()                                           # flip figure x and y
+p = p + geom_boxplot()                                         # add boxplot
+p = p + theme(plot.background = element_rect(fill = figbg,     # change figure background
+                                             color = figbg))
+p                                                              # show plot
 ```
 
 It is much clearer from this boxplot than it was from the scatterplot that there might be some relationship between GvHD and recipient age.
 
 ```{r box-gvhd-donor-idx, echo=FALSE, fig.cap="Boxplot of GvHD outcome against (a) donor age (b) MECLR/MLR index.", fig.height=4}
-p1 = ggplot(gvhd, aes(y=donor_age, x=gvhd, group=gvhd, fill=gvhd)) + coord_flip()
-p1 = p1 + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+p1 = ggplot(gvhd, aes(y=donor_age, x=gvhd,                     # set up first plot for donor_age
+                      group=gvhd, fill=gvhd))
+p1 = p1 + coord_flip()                                         # flip figure x and y
+p1 = p1 + geom_boxplot()                                       # add boxplot
+p1 = p1 + theme(plot.background = element_rect(fill = figbg,   # change figure background
+                                               color = figbg))
 
-p2 = ggplot(gvhd, aes(y=index, x=gvhd, group=gvhd, fill=gvhd)) + coord_flip()
-p2 = p2 + geom_boxplot() + theme(plot.background = element_rect(fill = figbg, color = figbg))
+p2 = ggplot(gvhd, aes(y=index, x=gvhd,                         # set up plot 2 for index
+                      group=gvhd, fill=gvhd))
+p2 = p2 + coord_flip()                                         # flip figure x and y
+p2 = p2 + geom_boxplot()                                       # add boxplot
+p2 = p2 + theme(plot.background = element_rect(fill = figbg,   # change figure background
+                                               color = figbg))
 
-ggarrange(p1, p2, labels=c("(a)", "(b)"), ncol=1, nrow=2)
+ggarrange(p1, p2, labels=c("(a)", "(b)"),                      # combine boxplots into single
+          ncol=1, nrow=2)                                      # figure with labels (a) and (b)
 ```
 
-We can see from this representation that GvHD does appear to have some dependency on the explanatory variables of donor and recipient age, and MECLR/MLR index.
+We can see from the boxplots in figure 3.4 representation that GvHD does appear to have depend in some way on the explanatory variables of donor and recipient age, and MECLR/MLR index.
 
 ## Pairs plot
 
-The `R` language is set up to handle data well, and we can specify what type of data is contained in a particular variable. This information can then be used by packages like `GGally` to ensure we get an appropriate graphical output.
+The `R` language was created specifically to work with data, and can treat numerical and categorical data appropriately. When we load in a dataset, we can specify what type of data is contained in each measured variable. This information can then be used by statistical packages to ensure we get an appropriate graphical output.
 
-Here, using the `ggpairs` function from `GGally`, we can generate scatterplots, boxplots, histograms, density plots and correlations for all pairs of variables, simultaneously, in a *pairs plot*.
+As an example, the `ggpairs` function from `GGally` generates scatterplots, boxplots, histograms, density plots and correlations, as appropriate, in the *pairs plot* below. It automatically identifies the type of data in each variable, and chooses the appropriate mode of visualisation for summarising and comparing the data from each pair of variables.
 
 ```{r scatter-pairs, echo=FALSE, fig.cap="Pairs plot of `gvhd` data, providing an overview of relationships between variables.", fig.width=10, fig.height=10}
-ggpairs(gvhd) + theme(plot.background = element_rect(fill = figbg, color = figbg))
+p = ggpairs(gvhd)                                             # create pairs plot for all gvhd data
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour background
+                                             color = figbg))
+p                                                             # show plot
 ```
 
 This gives us a rich visual overview of the relationships in our dataset.
+
+As a first assessment, we can look at each of the plots in the `gvhd` column of figure 3.5 and look to see whether there is a visual difference between distributions of the categories `0` (no GvHD) and `1` (GvHD development) for each of the explanatory variables.
+
+<div id="questions">
+1. Which explanatory variables appear to have some assocation with a difference in GvHD outcome?
+2. For each of those variables, do you think the apparent association is biologically meaningful?
+</div>
+
+# `R` code used in this notebook
+
+## Loading data
+
+To load the dataset, we use `read_delim()` from the `readr` package. We specify the "tab" delimiter (`\t`) because each column in the data file is separated by this character. We define useful column names, and tell `R` what the data type is for each column in the `col_types` string:
+
+- `i`: integer (numerical)
+- `f`: factor (categorical)
+- `d`: double (numerical, continuous)
+
+```r
+gvhd = read_delim("../assets/data/gvhd.dat", delim="\t",
+                  col_names = c("patient", "time", "recipient_m_f", "recipient_age",
+                                "donor_age", "type", "donor_m_f_preg", "index", "gvhd"),
+                  col_types="iifiiffdf",
+                  skip=1)
+```
+
+## Figure 3.1
+
+The `R` code below plots `recipient_age` against `donor_age` in a scatterplot.
+
+```r
+p = ggplot(gvhd, aes(x=donor_age, y=recipient_age))           # create plot with gvhd data
+p = p + geom_point()                                          # add scatterplot
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour plot background
+                                             color = figbg))
+p                                                             # show plot
+```
+
+## Figure 3.2
+
+The code below plots `gvhd` outcome against `recipient_age` as a scatterplot.
+
+```r
+p = ggplot(gvhd, aes(x=recipient_age, y=gvhd))                # create plot with gvhd data
+p = p + geom_point()                                          # add scatterplot
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour plot background
+                                             color = figbg))
+p                                                             # show plot
+```
+
+## Figure 3.3
+
+In this figure, we show a boxplot relating the *response variable* `gvhd` to `recipient_age`. Note that, to get the horizontal boxplot, we can't just swap `x` and `y` in the `ggplot()` function, but we must use `coord_flip()` to flip horozontal and vertical for the figure as a whole.
+
+```r
+p = ggplot(gvhd, aes(y=recipient_age, x=gvhd,                  # set up plot with gvhd data
+                     group=gvhd, fill=gvhd)) 
+p = p + coord_flip()                                           # flip figure x and y
+p = p + geom_boxplot()                                         # add boxplot
+p = p + theme(plot.background = element_rect(fill = figbg,     # change figure background
+                                             color = figbg))
+p                                                              # show plot
+```
+
+## Figure 3.4
+
+Here, we create boxplots as in figure 3.3, but combine them into a single figure (with `(a)` and `(b)` labels) using the `ggarrange()` function that comes from the `ggpubr` package.
+
+```r
+p1 = ggplot(gvhd, aes(y=donor_age, x=gvhd,                     # set up first plot for donor_age
+                      group=gvhd, fill=gvhd))
+p1 = p1 + coord_flip()                                         # flip figure x and y
+p1 = p1 + geom_boxplot()                                       # add boxplot
+p1 = p1 + theme(plot.background = element_rect(fill = figbg,   # change figure background
+                                               color = figbg))
+
+p2 = ggplot(gvhd, aes(y=index, x=gvhd,                         # set up plot 2 for index
+                      group=gvhd, fill=gvhd))
+p2 = p2 + coord_flip()                                         # flip figure x and y
+p2 = p2 + geom_boxplot()                                       # add boxplot
+p2 = p2 + theme(plot.background = element_rect(fill = figbg,   # change figure background
+                                               color = figbg))
+
+ggarrange(p1, p2, labels=c("(a)", "(b)"),                      # combine boxplots into single
+          ncol=1, nrow=2)                                      # figure with labels (a) and (b)
+```
+
+## Figure 3.5
+
+This code uses the `GGally` package to render a *pairs plot* comparing each variable in the `gvhd` dataset, using the `ggpairs()` function.
+
+```r
+p = ggpairs(gvhd)                                             # create pairs plot for all gvhd data
+p = p + theme(plot.background = element_rect(fill = figbg,    # colour background
+                                             color = figbg))
+p                                                             # show plot
+```
