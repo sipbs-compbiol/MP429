@@ -8,7 +8,7 @@ output:
     toc_float:
       toc_collapsed: false
     number_sections: true
-    css: "../assets/css/rmd_style.css"
+    css: "css/rmd_style.css"
     theme: lumen
 ---
 
@@ -136,6 +136,8 @@ Although our ability to measure things is limited in practice (e.g. a 30cm ruler
 
 <div id="note">
 It is not our ability to measure precisely that makes the data *continuous*, it is the nature of the *thing being measured*.
+
+Measurements are always taken as *discrete* values, such as mass to the nearest gramme, but we *model* the measurements on their underlying continuous scale.
 </div>
 
 ### Discrete Data

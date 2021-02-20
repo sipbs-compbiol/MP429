@@ -8,7 +8,7 @@ output:
     toc_float:
       toc_collapsed: false
     number_sections: true
-    css: "../assets/css/rmd_style.css"
+    css: "css/rmd_style.css"
     theme: lumen
 ---
 
@@ -67,10 +67,12 @@ In all questions, whether for understanding or prediction, we rely on *modelling
 Firstly, although we measure data in our experiments, for some statistical approaches we do not use the data directly to calculate output. Instead, we use the data to find *parameters* of a *distribution* (e.g. *mean* and *standard deviation*), such as a Normal or Poisson distribution. This distribution is an idealised *model* of how the data behaves, and it simplifies our work to use this model to represent our data, instead of the actual individdual values of the data 
 
 <div id="note">
-If you have ever performed a *t*-test, based on the means and standard deviations of two datasets, you were doing exactly this! The means and standard deviations were parameters that described a model of your data, in place of using the actual measurements themselves.
+If you have ever performed a *t*-test or similar statistical analysis, based on the means and standard deviations of two datasets, you were doing exactly this!
+
+The means and standard deviations were parameters that described a model of your data, in place of using the actual measurements themselves. These would then have been used to answer an *understanding* question: "is there evidence that two distributions are different?"
 </div>
 
-A key concern in statistics is ensuring that the choice of model distribution to represent an experimental dataset is appropriate, and we will spend some time in the workshop notes exploring this.
+A key concern in statistics is ensuring that the choice of model distribution to represent an experimental dataset is appropriate, and we will spend some time in the workshop notebooks exploring this.
 
 ```{r model-normal, echo=FALSE, fig.cap="Two hundred measured data values (histogram) and the corresponding Normal distribution model (curve) of those values. The modelled distribution is entirely described by the parameters: mean=10 (µ) and standard deviation=3 (σ). We can see here that the frequency of real data values don't match the curve exactly; the model simplifies our representation of the 'noisy' data. The dashed line represents the mean value of the model, and the dotted lines represents values at +/- one and two standard deviations from the mean."}
 mu = 10                          # define mean of distribution
@@ -109,6 +111,14 @@ p                                                                    # show plot
 Secondly, the relationship between explanatory and response variables is described by a simplified representation of that relationship: this is also a *model*. For example, if we fit a linear regression between measured values of "plant height" (response variable) and "hours of sunlight received" (explanatory variable), the line of best-fit is a *model* of the relationship between those variables. The inferred values of *intercept* and *gradient* (or *slope*) for this line are *parameters* of that model.
 
 Much of statistical analysis is about estimating the values of parameters for these models, and exploring the implications of the resulting models.
+
+<div id="note">
+Please take some time to explore a statistical distribution interactively in your browser, at the link below.
+
+- [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01a-sampling/)
+
+This will allow you to explore the way in which the parameters of a statistical distribution change its shape, and alter how well it represents your measured data.
+</div>
 
 ## Why Are We Doing This Workshop
 
