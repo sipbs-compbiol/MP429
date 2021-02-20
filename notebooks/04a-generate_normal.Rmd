@@ -1,0 +1,153 @@
+---
+title: "Where Does the Normal Distribution Come From?"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output:
+  bookdown::html_document2:
+    css: css/rmd_style.css
+    theme: lumen
+    toc: yes
+    toc_float:
+      toc_collapsed: no
+    number_sections: yes
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(ggplot2)
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
+```
+
+<div id="summary">
+- Like most statistical distributions, the Normal distribution represents the outcome of a process, equivalent to a real-world activity
+- The process used to generate a normal distribution is:
+  - Create a large dataset of (continuous) values; this has a (true) mean
+  - Repeatedly subsample that set of values, and calculate the mean of each subsample
+  - The means of the subsamples are estimates of the *true* mean
+- The distribution of subsample means is a Normal distribution
+- **The Normal distribution corresponds to repeated estimations of the same (true) continuous variable**
+</div>
+
+# Introduction
+
+# Generating a Normal Distribution
+
+## Create a dataset of values
+
+To begin with, we generate a dataset of numbers. These do not themselves have to be normally-distributed. Here, for example, we will generate a number of randomly-chosen values between -10 and +10.
+
+```{r base-samples, echo=FALSE}
+inputPanel(
+  sliderInput("n_points",
+              "Number of datapoints:",
+              min = 200,
+              max = 1000,
+              value = 500),
+  
+    sliderInput("min_max",
+              "Range of datapoints:",
+              min = -1000,
+              max = 1000,
+              value = c(-200, 200)),
+  
+  actionButton("resample", "Resample")
+)
+  
+dist_data = eventReactive(c(input$resample, input$n_points, input$min_max),
+                         data.frame(vals=runif(input$n_points, input$min_max[1], input$min_max[2])),
+                         ignoreNULL=FALSE)
+
+renderPlot({
+        n_points = input$n_points
+        data = dist_data()
+        mu = mean(data$vals)
+        std = sd(data$vals)
+  
+        breaks = seq(mu - 3 * std, mu + 3 * std, by=max(1, std/8))      # set up the breakpoints between bars in the histogram
+        p = ggplot(data, aes(x=vals))                                    # set up the ggplot with data
+        p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                               breaks=breaks,
+                               fill="cornflowerblue")
+        p = p + annotate("segment",                                          # show the mean as a dashed line
+                         x=mu, xend=mu, y=0, yend=0.01,
+                         colour="darkorange1", size=1, linetype="dashed")
+        p = p + annotate("segment",                                          # show standard deviations as dotted lines
+                         x=c(mu-2*std, mu-std, mu+std, mu+2*std),
+                         xend=c(mu-2*std, mu-std, mu+std, mu+2*std),
+                         y=c(0, 0, 0, 0), yend=c(0.01, 0.01, 0.01, 0.01),
+                         colour="goldenrod", size=1, linetype="dotted")
+        p = p + annotate("text",                                             # annotate the lines
+                         x=c(mu-2*std, mu-std, mu, mu+std, mu+2*std),
+                         y=c(0.011, 0.011, 0.011, 0.011, 0.011),
+                         colour="darkorange3",
+                         label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
+        p = p + xlim(mu - max(5, 3 * std), mu + max(5, 3 * std))             # set x-axis limits
+        p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+        p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                                     color = figbg))
+        p    
+})
+
+fluidPage(
+  mainPanel(
+    span("Now we take subsamples from the original dataset")
+  )
+)
+
+inputPanel(
+  sliderInput("n_subsamples",
+              "Number of subsamples:",
+              min = 3,
+              max = 500,
+              value = 250),
+  
+    sliderInput("subsample_size",
+              "Datapoints in each subsample:",
+              min = 3,
+              max = 200,
+              value = 25),
+  
+  actionButton("re_subsample", "Resample")
+)
+
+subsamples = eventReactive(c(input$n_subsamples, input$subsample_size, input$re_subsample),
+                           data.frame(vals=replicate(input$n_subsamples, sample(dist_data()$vals, input$subsample_size))),
+                           ignoreNULL=FALSE)
+
+renderPlot({
+        means = data.frame(vals=colMeans(subsamples()))
+        mu = mean(means$vals)
+        std = sd(means$vals)
+
+        breaks = seq(mu - 3 * std, mu + 3 * std, by=max(1, std/8))      # set up the breakpoints between bars in the histogram
+        p = ggplot(means, aes(x=vals))                                    # set up the ggplot with data
+        p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                               breaks=breaks,
+                               fill="cornflowerblue")
+        p = p + stat_function(fun=dnorm, args=list(mean=mu, sd=std),          # add a layer with the Normal curve 
+                              geom="line")
+        p = p + annotate("segment",                                          # show the mean as a dashed line
+                         x=mu, xend=mu, y=0, yend=0.1,
+                         colour="darkorange1", size=1, linetype="dashed")
+        p = p + annotate("segment",                                          # show standard deviations as dotted lines
+                         x=c(mu-2*std, mu-std, mu+std, mu+2*std),
+                         xend=c(mu-2*std, mu-std, mu+std, mu+2*std),
+                         y=c(0, 0, 0, 0), yend=c(0.1, 0.1, 0.1, 0.1),
+                         colour="goldenrod", size=1, linetype="dotted")
+        p = p + annotate("text",                                             # annotate the lines
+                         x=c(mu-2*std, mu-std, mu, mu+std, mu+2*std),
+                         y=c(0.11, 0.11, 0.11, 0.11, 0.11),
+                         colour="darkorange3",
+                         label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
+        p = p + xlim(mu - max(5, 3 * std), mu + max(5, 3 * std))             # set x-axis limits
+        p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+        p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                                     color = figbg))
+        p    
+        
+})
+```
+  
