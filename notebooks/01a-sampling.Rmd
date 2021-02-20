@@ -156,7 +156,7 @@ renderPlot({
 
 Many (but not all) statistical distributions can be described completely in terms of two values, or *parameters*:
 
-- a **central value**, which usually represents the "most likely" or "most common" value in the data
+- a **central value**, or *location*, which usually represents the "most likely" or "most common" value in the data
 - a measure of **dispersion**, *spread*, or variance of data about the central value
 
 <div id="warning">
