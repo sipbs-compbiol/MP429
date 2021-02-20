@@ -142,6 +142,9 @@ You will not be expected to write your own *code* in `R`, only to understand the
 
 # `R` code used in this notebook
 
+<details>
+  <summary>Click to toggle `R` code for Figure 2.1</summary>
+  
 The `R` code below plots the Normal distribution from figure 2.1, with a random sampling of 200 "measured" variables from this distribution, using `ggplot2`.
 
 ```r
@@ -176,3 +179,4 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
                                              color = figbg))
 p                                                                    # show plot
 ```
+</details>

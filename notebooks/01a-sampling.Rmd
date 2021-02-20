@@ -3,7 +3,7 @@ title: "Exploring a Statistical Distribution"
 author: "Leighton Pritchard"
 date: "2021 Presentation"
 output:
-  html_document:
+  bookdown::html_document2:
     css: css/rmd_style.css
     theme: lumen
     toc: yes

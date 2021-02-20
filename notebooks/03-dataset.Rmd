@@ -3,7 +3,7 @@ title: "What is a Dataset?"
 author: "Leighton Pritchard"
 date: "2021 Presentation"
 output: 
-  html_document:
+  bookdown::html_document2:
     toc: true
     toc_float:
       toc_collapsed: false
@@ -66,7 +66,11 @@ The use of these terms is not always consistent in the literature, and can somet
 
 ## Data Tables
 
-By convention, we represent data in *tables* so that *rows* represent *observations*, and *columns* represent *variables*. The interactive widgets below show some example datasets.
+By convention, we represent data in *tables* so that *rows* represent *observations*, and *columns* represent *variables*.
+
+![Example table showing the layout of observations, variables, and measurements](../assets/images/obs_var_table.png)
+
+The interactive widgets below show some example datasets.
 
 ### The `iris` dataset
 
@@ -101,7 +105,7 @@ pima = read_csv("../assets/data/pima/pima-indians-diabetes.csv",                
 datatable(pima)
 ```
 
-Again, we visualise relationships with a pairs plot,
+Again, we can visualise relationships with a pairs plot,
 
 ```{r pima-pairs, echo=FALSE, fig.cap="Pairs plot of `pima` data, providing an overview of relationships between variables.", fig.width=10, fig.height=10}
 p = ggpairs(pima)                                             # create pairs plot for all pima data
@@ -127,6 +131,8 @@ There are two main types of data: numerical and categorical
 Numerical data is, unsurprisingly, data that can reasonably be represented as numbers. Values like 3.141, 0, -7, $10^8$ and so on are all numbers, and could be found in numerical data.
 
 But it's a little more complicated than that.
+
+![Numerical data can be subdivided into two categories: Discrete and Continuous data](../assets/images/numerical_data.png)
 
 ### Continuous Data
 
@@ -162,6 +168,8 @@ It can be a warning sign that something is not right with an analysis if a calcu
 
 But, as with numerical data, it's a little more complicated than that.
 
+![Catgorical data can be subdivided into two categories: Factors and Ordinal data](../assets/images/categorical_data.png)
+
 Sometimes, as with *continuous numerical data*, the category is a property of the experimental unit that falls into one or more groups, such as eye colour, or nationality. Here there is no implicit ranking or ordering (blue eyes are not "more than" green eyes, for instance). These are often referred to as *factors*.
 
 Other categories however may have an implicit ranking - like "large", "medium", and "small" drinks at a fast food outlet - and these are called *ordinal data*.
@@ -182,12 +190,13 @@ By convention we often take `1` implicitly to mean "true" or "present", and `0` 
 
 <div id="questions">
 1. What kind of data is in the `iris` dataset?
-2. What kind of data are variables `pregnancies`, `BMI`, and `class` in the `pima` dataset?
+2. What kind of data are the variables `pregnancies`, `BMI`, and `class` in the `pima` dataset?
 </div>
 
 # `R` code used in this notebook
 
-## `iris` data
+<details>
+  <summary>Click to toggle `R` code for visualising `iris` data</summary>
 
 The `iris` data exists as a variable in `R`, and we visualise it with the `ggpairs()` function from the `GGally` package.
 
@@ -197,8 +206,10 @@ p = p + theme(plot.background = element_rect(fill = figbg,    # colour backgroun
                                              color = figbg))
 p  
 ```
+</details>
 
-## `pima` data
+<details>
+  <summary>Click to toggle `R` code for visualising `pima` data</summary>
 
 The `pima` dataset is visualised in the same way, but must be loaded in from file, first. The data is read in using the `read_csv()` function from the `readr` package, defining useful column/field names for the variables, and specifying the data types for each variable in the `col_types` string:
 
@@ -208,7 +219,7 @@ The `pima` dataset is visualised in the same way, but must be loaded in from fil
 
 ```r
 pima = read_csv("../assets/data/pima/pima-indians-diabetes.csv",
-                col_names=c("pregnancies", "conc_Glc",      # Load data from file
+                col_names=c("pregnancies", "conc_Glc",        # Load data from file
                 "diastolic", "skin_fold",
                 "insulin", "BMI", "diabetes_pedigree",
                 "age", "class"),
@@ -218,3 +229,4 @@ p = p + theme(plot.background = element_rect(fill = figbg,    # colour backgroun
                                              color = figbg))
 p                                                             # show plot
 ```
+</details>

@@ -178,7 +178,8 @@ As a first assessment, we can look at each of the plots in the `gvhd` column of 
 
 # `R` code used in this notebook
 
-## Loading data
+<details>
+  <summary>Click to toggle `R` code for loading data</summary>
 
 To load the dataset, we use `read_delim()` from the `readr` package. We specify the "tab" delimiter (`\t`) because each column in the data file is separated by this character. We define useful column names, and tell `R` what the data type is for each column in the `col_types` string:
 
@@ -193,8 +194,10 @@ gvhd = read_delim("../assets/data/gvhd.dat", delim="\t",
                   col_types="iifiiffdf",
                   skip=1)
 ```
+</details>
 
-## Figure 3.1
+<details>
+  <summary>Click to toggle `R` code for Figure 3.1</summary>
 
 The `R` code below plots `recipient_age` against `donor_age` in a scatterplot.
 
@@ -205,8 +208,10 @@ p = p + theme(plot.background = element_rect(fill = figbg,    # colour plot back
                                              color = figbg))
 p                                                             # show plot
 ```
+</details>
 
-## Figure 3.2
+<details>
+  <summary>Click to toggle `R` code for Figure 3.2</summary>
 
 The code below plots `gvhd` outcome against `recipient_age` as a scatterplot.
 
@@ -217,8 +222,10 @@ p = p + theme(plot.background = element_rect(fill = figbg,    # colour plot back
                                              color = figbg))
 p                                                             # show plot
 ```
+</details>
 
-## Figure 3.3
+<details>
+  <summary>Click to toggle `R` code for Figure 3.3</summary>
 
 In this figure, we show a boxplot relating the *response variable* `gvhd` to `recipient_age`. Note that, to get the horizontal boxplot, we can't just swap `x` and `y` in the `ggplot()` function, but we must use `coord_flip()` to flip horozontal and vertical for the figure as a whole.
 
@@ -231,8 +238,10 @@ p = p + theme(plot.background = element_rect(fill = figbg,     # change figure b
                                              color = figbg))
 p                                                              # show plot
 ```
+</details>
 
-## Figure 3.4
+<details>
+  <summary>Click to toggle `R` code for Figure 3.4</summary>
 
 Here, we create boxplots as in figure 3.3, but combine them into a single figure (with `(a)` and `(b)` labels) using the `ggarrange()` function that comes from the `ggpubr` package.
 
@@ -254,8 +263,10 @@ p2 = p2 + theme(plot.background = element_rect(fill = figbg,   # change figure b
 ggarrange(p1, p2, labels=c("(a)", "(b)"),                      # combine boxplots into single
           ncol=1, nrow=2)                                      # figure with labels (a) and (b)
 ```
+</details>
 
-## Figure 3.5
+<details>
+  <summary>Click to toggle `R` code for Figure 3.5</summary>
 
 This code uses the `GGally` package to render a *pairs plot* comparing each variable in the `gvhd` dataset, using the `ggpairs()` function.
 
@@ -265,3 +276,4 @@ p = p + theme(plot.background = element_rect(fill = figbg,    # colour backgroun
                                              color = figbg))
 p                                                             # show plot
 ```
+</details>
