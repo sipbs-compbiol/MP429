@@ -1,0 +1,93 @@
+---
+title: "Sampling from Statistical Distributions"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output:
+  html_document:
+    css: "css/rmd_style.css"
+    theme: lumen
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
+```
+
+# Introduction
+
+<div id="note">
+This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
+</div>
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+# Inputs and Outputs
+
+You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
+
+```text
+{r dist-samples, echo=FALSE}
+inputPanel(
+  sliderInput("n_samples",
+              "Number of measured datapoints:",
+              min = 1,
+              max = 1000,
+              value = 50),
+  
+  sliderInput("mu", label = "Distribution mean:",
+              min = -20, max = 20, value = 10, step = 0.5),
+
+  sliderInput("sd", label = "Distribution standard deviation:",
+              min = 0.5, max = 10, value = 3, step = 0.5),
+  
+  actionButton("redraw", "Resample")
+  
+)
+
+dfm_hist = eventReactive(c(input$redraw, input$n_samples,
+                           input$mu, input$sd),
+                         data.frame(vals=rnorm(input$n_samples, mean=input$mu, sd=input$sd)),
+                         ignoreNULL=FALSE)
+
+renderPlot({
+        mu = input$mu
+        sd = input$sd
+        n_samples = input$n_samples
+  
+        breaks = seq(mu - 3 * sd, mu + 3 * sd, by=min(0.4, sd/10))      # set up the breakpoints between bars in the histogram
+        
+        p = ggplot(dfm_hist(), aes(x=vals))                                    # set up the ggplot with data
+        p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                               breaks=breaks,
+                               fill="cornflowerblue")
+        p = p + stat_function(fun=dnorm, args=list(mean=mu, sd=sd),          # add a layer with the Normal curve 
+                              geom="line")
+        p = p + annotate("segment",                                          # show the mean as a dashed line
+                         x=mu, xend=mu, y=0, yend=0.2,
+                         colour="darkorange1", size=1, linetype="dashed")
+        p = p + annotate("segment",                                          # show standard deviations as dotted lines
+                         x=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                         xend=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                         y=c(0, 0, 0, 0), yend=c(0.2, 0.2, 0.2, 0.2),
+                         colour="goldenrod", size=1, linetype="dotted")
+        p = p + annotate("text",                                             # annotate the lines
+                         x=c(mu-2*sd, mu-sd, mu, mu+sd, mu+2*sd),
+                         y=c(0.21, 0.21, 0.21, 0.21, 0.21),
+                         colour="darkorange3",
+                         label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
+        p = p + xlim(mu - max(5, 3 * sd), mu + max(5, 3 * sd))                               # set x-axis limits
+        p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+        p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                                     color = figbg))
+        p  
+    })
+
+```
+
