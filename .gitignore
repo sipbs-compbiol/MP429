@@ -6,3 +6,6 @@
 
 # Exclude test R MArkdown documents
 test_Rmd/
+
+# Exclude deployment info
+notebooks/rsconnect/
