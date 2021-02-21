@@ -28,6 +28,9 @@ figbg = "whitesmoke"
   - The value of statistics is in giving quantitative answers to questions
   - Whether the question is well-defined, or the statistical method well-chosen, is another matter.
 - This workshop aims to help you critically interpret literature and choose approaches for your own research, but does not focus on theory or mathematical formalism
+</div>
+
+<div id="note">
 - **The workshop is presented in a flipped style.**
   - You should read through the materials, attempt the exercises and interactive sections, and bring questions for discussion in the live online session.
 - The interactive sessions can be attempted online, but you could also use `RStudio` Desktop, installed on your own computer.
@@ -46,11 +49,11 @@ We are often concerned with the "truth" of some answer to our scientific questio
 
 Many courses will teach a "Hypothesis Testing Decision Tree," or something similar (see below). 
 
-![A Hypothesis Testing Decision Tree, linked from Pirk *et al.* (2013) *J. Apic. Res.* doi:10.3896/IBRA.1.52.4.13](https://www.researchgate.net/profile/Christian-Pirk/publication/256303889/figure/fig5/AS:392777901854729@1470656957861/A-basic-decision-tree-on-how-to-select-the-appropriate-statistical-test-is-shown_W640.jpg)
+![A Hypothesis Testing Decision Tree, image linked from Pirk *et al.* (2013) *J. Apic. Res.* doi:10.3896/IBRA.1.52.4.13](https://www.researchgate.net/profile/Christian-Pirk/publication/256303889/figure/fig5/AS:392777901854729@1470656957861/A-basic-decision-tree-on-how-to-select-the-appropriate-statistical-test-is-shown_W640.jpg)
 
-These flowcharts do not encourage much in the way of thought about the underlying structures, models and processes of these methods, and imply that the small collection of tests will do for all circumstances (which is absolutely not true). They tend not to present any conceptual framework that helps researchers through the inevitable cases where the formulaic application of these flowcharts is inappropriate for the question being asked of the research. These classical statistical methods tend to be inflexible and fragile: unable to adapt to novel contexts not met by their assumptions; and failing in unpredictable ways when they meet those contexts.
+These flowcharts do not encourage much in the way of thought about the underlying structures, models and processes of these methods, and imply that the small collection of tests will do for all circumstances (which is absolutely not true). They tend not to present any conceptual framework that helps researchers through the inevitable cases where the formulaic application of these flowcharts is inappropriate for the question being asked of the research. These classical statistical methods also tend to be inflexible and fragile: unable to adapt to novel contexts not met by their assumptions; and failing in unpredictable ways when they meet those contexts.
 
-In this workshop, we aim to give you some insight and tools to help you understand common statistical methods you might encounter, why they were used and - occasionally - why they perhaps should not have been used. One of our goals is to encourage you to look past a rote application of "The Null Ritual" (as coined in [Gigerenzer (2004) *J. Socio-Econ.* doi:10.1016/j.socec.2004.09.033](https://doi.org/10.1016/j.socec.2004.09.033)):
+In this workshop, we aim to give you some insight and tools to help you understand common statistical methods you might encounter, why they are used and - occasionally - why they perhaps should not have been used. One of our goals is to encourage you to look past a rote application of "The Null Ritual" (as coined in [Gigerenzer (2004) *J. Socio-Econ.* doi:10.1016/j.socec.2004.09.033](https://doi.org/10.1016/j.socec.2004.09.033)):
 
 1. Set up a statistical null hypothesis of "no mean difference" or "zero correlation." Don't specify the predictions of your research hypothesis or of any alternative substantive hypotheses.
 2. Use 5% as a convention for rejecting the null. If significant, accept your research hypothesis. Report the result as *p*<0.05, *p*<0.07, or *p*<0.001 (whichever comes next to the obtained *p*-value).
@@ -65,7 +68,7 @@ The Null Ritual is frequently observed in publications where Null Hypothesis Sig
 <div id="note">
 Ths workshop does not attempt to teach you the "right" way to do statistics, in the sense of "use tool X for problem Y". Fundamentally, there is no recipe for this, and there is no shortcut for understanding the question you wish to ask with your experiment, and whether your chosen statistical method will actually answer that question.
 
-We are instead trying to introduce some statistical thinking, in terms of understanding the bases of common statistical tools, their applications, and their limitations.
+We are instead trying to introduce some statistical thinking, in terms of understanding the bases of common statistical tools, their applications, and their limitations. This will help you determine whether a particular approach can answer your question.
 
 **Whichever tool you use, understanding your own experiment and data or, if you're critically assessing someone else's research, understanding their experiment and data, should be the foundational starting point for all analyses.**
 </div>
@@ -95,26 +98,26 @@ datatable(PlantGrowth, width=400,
 
 ### Understanding and Prediction
 
-Statistics enables two key types of researchers' questions to be answered: *understanding* questions, and *prediction* questions.
+Statistics allows us to calculate answers to many kinds of questions. These can be grouped into two key types: *understanding* questions, and *prediction* questions.
 
 - *understanding* questions might take the form of determining whether changing the value of an *explanatory* variable affects the value of the *response* variable. The question might be asking whether there is a change at all, or how much of a change there is.
 - *prediction* questions also need to determine a similar relationship between *explanatory* and *response* variables, but they then seek to use those relationships to *predict* responses of individuals on the basis of explanatory variables that might be measured in the future.
 
 ### Models
 
-In all questions, whether for understanding or prediction, we rely on *modelling* the behaviours of the variables we measure, and also the interactions between those variables - such as the way that explanatory variables influence the response variable value. Modelling is a broad, complex field, but for the purpose of this workshop we can consider *models* to be simplified representations of data, and of the relationships between data. In this workshop, we'll use two main kinds of model.
+In all questions, whether for understanding or prediction, we rely on *modelling* the behaviours of the variables we measure, and also the interactions between those variables - such as the way that explanatory variables influence the response variable value. Modelling is a broad, complex field, but for the purpose of this workshop we can consider *models* to be simplified representations of data, and of the relationships between data. In this workshop, we'll mostly be considering two main kinds of model.
 
-Firstly, although we measure data in our experiments, for some statistical approaches we do not use the data directly to calculate output. Instead, we use the data to find *parameters* of a *distribution* (e.g. *mean* and *standard deviation*), such as a Normal or Poisson distribution. This distribution is an idealised *model* of how the data behaves, and it simplifies our work to use this model to represent our data, instead of the actual individdual values of the data 
+Firstly, although we measure data in our experiments, some statistical approachesdo not use the data directly to calculate their result Instead, we use the data to find values that can be used as *parameters* of a *distribution* (e.g. *mean* and *standard deviation*), such as a Normal or Poisson distribution. The corresponding distribution is an idealised *model* of how the data behaves, and it simplifies our work to use this model to represent our data, instead of the actual individdual values of the data 
 
 <div id="note">
 If you have ever performed a *t*-test or similar statistical analysis, based on the means and standard deviations of two datasets, you were doing exactly this!
 
-The means and standard deviations were parameters that described a model of your data, in place of using the actual measurements themselves. These would then have been used to answer an *understanding* question: "is there evidence that two distributions are different?"
+The means and standard deviations were parameters that described an idealised model of your data, in place of using the actual measurements themselves. These could then have been used to answer an *understanding* question: "should we believe that these two distributions have different mean values?"
 </div>
 
-A key concern in statistics is ensuring that the choice of model distribution to represent an experimental dataset is appropriate, and we will spend some time in the workshop notebooks exploring this.
+A key concern in statistics is ensuring that the choice of model distribution to represent an experimental dataset is appropriate, and we will spend some time in the workshop notebooks exploring this. In Figure \@ref(fig:model-normal) below, we can see a curve describing the expected distribution of frequencies of values for a Normal distribution, and a single dataset of 200 datapoints sampled from that distribution. Note that the sampled data does not follow the shape of the curve exactly.
 
-```{r model-normal, echo=FALSE, fig.cap="Two hundred measured data values (histogram) and the corresponding Normal distribution model (curve) of those values. The modelled distribution is entirely described by the parameters: mean=10 (µ) and standard deviation=3 (σ). We can see here that the frequency of real data values don't match the curve exactly; the model simplifies our representation of the 'noisy' data. The dashed line represents the mean value of the model, and the dotted lines represents values at +/- one and two standard deviations from the mean."}
+```{r model-normal, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Normal distribution model (curve) generating those values. The modelled distribution is entirely described by the parameters: mean=10 (µ) and standard deviation=3 (σ). We can see here that the frequency of real data values don't match the curve exactly; the model simplifies our representation of the 'noisy' data. The dashed line represents the mean value of the model, and the dotted lines represents values at +/- one and two standard deviations from the mean."}
 mu = 10                          # define mean of distribution
 sd = 3                           # define standard deviation of distribution
 breaks = seq(0, 20, by=0.4)      # set up the breakpoints between bars in the histogram
@@ -147,11 +150,6 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
 p                                                                    # show plot
 ```
 
-
-Secondly, the relationship between explanatory and response variables is described by a simplified representation of that relationship: this is also a *model*. For example, if we fit a linear regression between measured values of "plant height" (response variable) and "hours of sunlight received" (explanatory variable), the line of best-fit is a *model* of the relationship between those variables. The inferred values of *intercept* and *gradient* (or *slope*) for this line are *parameters* of that model.
-
-Much of statistical analysis is about estimating the values of parameters for these models, and exploring the implications of the resulting models.
-
 <div id="note">
 Please take some time to explore a statistical distribution interactively in your browser, at the link below.
 
@@ -168,25 +166,48 @@ One strategy for choosing a distribution to represent your data is to plot a his
 As you will have seen from the interactive session, even the data that was drawn specifically from a Normal Distribution did not always look like a Normal Distribution when presented as a histogram. In general, it may very well be that a given choice of distribution is good or poor, but it cannot determined by examining histograms, or by guesswork. We need to apply sound principles to our choice of statistical methods, and this workshop will attempt to give you some intuitions about those choices, for your own work, and to help approach others' work critically.
 </div>
 
-## Why Are We Doing This Workshop
+Secondly, the relationship between explanatory and response variables is described by a simplified representation of that relationship: this is also a *model*. For example, if we suspect that the amount of sunlight received by a plant influences its growth, we might try to fit a linear regression between measured values of "plant height" (response variable) and "hours of sunlight received" (explanatory variable). Here, the line of best-fit is a *model* of the relationship between those variables, reflecting our *belief* that there is a *linear* relationship between the two variables. The inferred values of *intercept* and *gradient* (or *slope*) for this line are *parameters* of that model.
 
-The emphasis of this workshop is to introduce common statistical tools, and help you develop an insight into how they work and when they should, and perhaps also when they ought not to, be applied. This is not a formal mathematical presentation of statistical methods, or statistical *theory*. Rather, this workshop is a primer that describes how and why particular statistical methods are applied to answer research questions, and how to critically interpret their application and interpretation in the literature.
+<div id="note">
+A researcher's choice of model (and of statistical method) embodies a set of beliefs about the processes that generated their data. In effect, they represent the researchers' beliefs about the natural world or, at least, the experiment that was performed.
+</div>
 
-Although we will not dive into theory or mathematics in detail, you should understand that these methods are thoroughly grounded in mathematics and are not constructed in an *ad hoc* way.
+Much of statistical analysis of *relationships* between variables is about estimating the values of parameters for these models, and exploring the implications of the resulting parametrised models.
+
+# Why Are We Doing This Workshop?
+
+The emphasis of this workshop is to introduce common statistical tools, and help you develop an insight into how they work and when they should, and perhaps also when they ought not to, be applied. This is not a formal mathematical presentation of statistical methods, or statistical *theory*. Rather, this workshop is a primer that describes and discusses how and why statistical methods are applied to answer research questions, and how to critically interpret their application and interpretation in the literature.
+
+Although we will not dive into theory or mathematics in detail, you should understand that these methods are mathematical, and are not constructed in an *ad hoc* way.
 
 ## What You Should Expect From This Workshop
 
 The workshop is presented in a *flipped* format. That is, the homework comes *before* the class, and we use an online Zoom session to work though questions and discussions prompted by the material.
 
-This material is broken up into notebooks (like this one) which you should read. Each notebook should work as a standalone piece of material (though they should be read more-or-less in order). You should attempt the exercises in each notebook and - optionally - also attempt the interactive sections. 
+This material is broken up into notebooks (like this one) which you should read. Each notebook should be digestigle as a standalone piece of material (though they should be read more-or-less in order). You should attempt the exercises in each notebook and - ideally - also attempt the interactive sessions.
 
-The interactive sessions either fall at the end of a notebook, or are standalone notebooks. Both may require that you install [`RStudio` Desktop](https://rstudio.com/products/rstudio/download/) - a free IDE (Integrated Development Environment) on your own computer. The implementation of statistical methods is handled almost exclusively by computers, these days, and `R` is the most common environment for statistical analysis in scientific research. Gaining some familiarity with `R` will help your research, and maybe even your future employability.
+The interactive sessions are linked to from the main notebooks. The materials are all presented online, but you may run them on your own computer if you install [`RStudio` Desktop](https://rstudio.com/products/rstudio/download/) - a free IDE (Integrated Development Environment).
+
+You will not be expected to write your own *code* in `R`, only to understand the methods, decide which are appropriate to answer any questions you are given, apply the methods, and interpret the answers you get.
 
 <div id="warning">
 **Please be aware that technical questions about `RStudio` etc. will not be addressed in the live online Zoom session**. If you encounter technical difficulties you should email one of the workshop presenters when you encounter the problem.
 </div>
 
-You will not be expected to write your own *code* in `R`, only to understand the methods, decide which are appropriate to answer any questions you are given, apply the methods, and interpret the answers you get.
+## A Quick Word About Statistical Computing
+
+The implementation of statistical methods is handled almost exclusively by computers, these days. This is true to the extent that a purely mathematical - or intuition-led (like this workshop) - approach is insufficient. The same statistical model might be implemented computationally in more than one way, and the differences between those approaches can matter very greatly.
+
+The best way to explore and understand statistics is via computing tools. `R` is the most common environment for statistical analysis in scientific research. Gaining some familiarity with `R` will help your research, and maybe even your future employability. In any case, it encourages the kind of good practice we would like to see the scientists of tomorrow adopt:
+
+1. **Use the command-line**. There are point-and-click tools like Excel, GenStat, and MINITAB, which can perform statistical analyses. But these encourage bad practice for reproducibility and ethics. With those tools, it is often impossible to reproduce the exact series of clicks, drags, and button-pushes that generated a result. With `R` each action is implemented as a command in a script, and this documents itself to the extent that the analysis should be rplicable exactly just be re-running the script.
+2. **Use open-source, free, public tools**. `R` is, itself, open-source - as are nearly all the statistical packages you can use with `R`. This has two main benefits. Firstly, many eyes can inspect the code for errors or problems, and improve it over time. The tools become more robust over time, unlike proprietary tools where errors and mistakes may not be easily spotted, or ever fixed. Secondly, it encourages a wider user-base and community which, as it grows, includes more people who can help improve tools like `R` and its packages, but also help out with *your* use of `R`.
+3. **Use version control**. Version control is a way to ensure a "chain of custody" of analyses and data, like preserving evidence in a criminal case. It is best-practice for computational work of all kinds, and is naturally supported in `R` (though we'll not talk about it in detail, here).
+
+In the spirit of openness, each notebook will have a section where you can read and inspect the `R` code used in it. In addition, all this material is developed openly and can be downloaded from `GitHub`, and run on your own computer. If you like, you can suggest modifications and extra material through this website.
+
+- [https://github.com/widdowquinn/MP429](https://github.com/widdowquinn/MP429) - `GitHub` repository
+- [Issues page for questions, suggestions, etc.](https://github.com/widdowquinn/MP429/issues)
 
 # `R` code used in this notebook
 
