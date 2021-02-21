@@ -120,6 +120,14 @@ Please take some time to explore a statistical distribution interactively in you
 This will allow you to explore the way in which the parameters of a statistical distribution change its shape, and alter how well it represents your measured data.
 </div>
 
+<div id="warning">
+**BEWARE OF HISTOMANCY!**
+
+One strategy for choosing a distribution to represent your data is to plot a histogram of that data and, by looking at it, choose an appropriately-shaped distribution. In his book *Statistical Rethinking*, Richard McElreath refers to this as "Histomancy", by analogy to haruspicy, necromancy and other fake magic arts that claimed to disclose hidden truths by looking at entrails or speaking with the dead.
+
+As you will have seen from the interactive session, even the data that was drawn specifically from a Normal Distribution did not always look like a Normal Distribution when presented as a histogram. In general, it may very well be that a given choice of distribution is good or poor, but it cannot determined by examining histograms, or by guesswork. We need to apply sound principles to our choice of statistical methods, and this workshop will attempt to give you some intuitions about those choices, for your own work, and to help approach others' work critically.
+</div>
+
 ## Why Are We Doing This Workshop
 
 The emphasis of this workshop is to introduce common statistical tools, and help you develop an insight into how they work and when they should, and perhaps also when they ought not to, be applied. This is not a formal mathematical presentation of statistical methods, or statistical *theory*. Rather, this workshop is a primer that describes how and why particular statistical methods are applied to answer research questions, and how to critically interpret their application and interpretation in the literature.
