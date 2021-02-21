@@ -69,24 +69,27 @@ renderPlot({
         std = sd(data$vals)
   
         breaks = seq(mu - 3 * std, mu + 3 * std, by=max(1, std/8))      # set up the breakpoints between bars in the histogram
+        
+        ytop = 1.3 * max(density(data$vals)$y)
+        
         p = ggplot(data, aes(x=vals))                                    # set up the ggplot with data
         p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
                                breaks=breaks,
                                fill="cornflowerblue")
         p = p + annotate("segment",                                          # show the mean as a dashed line
-                         x=mu, xend=mu, y=0, yend=0.01,
+                         x=mu, xend=mu, y=0, yend=0.9 * ytop,
                          colour="darkorange1", size=1, linetype="dashed")
         p = p + annotate("segment",                                          # show standard deviations as dotted lines
                          x=c(mu-2*std, mu-std, mu+std, mu+2*std),
                          xend=c(mu-2*std, mu-std, mu+std, mu+2*std),
-                         y=c(0, 0, 0, 0), yend=c(0.01, 0.01, 0.01, 0.01),
+                         y=c(0), yend=c(0.9 * ytop),
                          colour="goldenrod", size=1, linetype="dotted")
         p = p + annotate("text",                                             # annotate the lines
                          x=c(mu-2*std, mu-std, mu, mu+std, mu+2*std),
-                         y=c(0.011, 0.011, 0.011, 0.011, 0.011),
+                         y=c(0.95 * ytop),
                          colour="darkorange3",
-                         label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
-        p = p + xlim(mu - max(5, 3 * std), mu + max(5, 3 * std))             # set x-axis limits
+                         label=c("µ - 2σ", "µ - σ", paste("µ=", format(round(mu, 2), nsmall=2)), "µ + σ", "µ + 2σ"))
+        p = p + xlim(-1000, 1000)             # set x-axis limits
         p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
         p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
                                                      color = figbg))
@@ -115,7 +118,8 @@ inputPanel(
   actionButton("re_subsample", "Resample")
 )
 
-subsamples = eventReactive(c(input$n_subsamples, input$subsample_size, input$re_subsample),
+subsamples = eventReactive(c(input$n_subsamples, input$subsample_size, input$re_subsample,
+                             input$resample, input$n_points, input$min_max),
                            data.frame(vals=replicate(input$n_subsamples, sample(dist_data()$vals, input$subsample_size))),
                            ignoreNULL=FALSE)
 
@@ -125,6 +129,8 @@ renderPlot({
         std = sd(means$vals)
 
         breaks = seq(mu - 3 * std, mu + 3 * std, by=max(1, std/8))      # set up the breakpoints between bars in the histogram
+        ytop = 1.3 * max(density(means$vals)$y)
+        
         p = ggplot(means, aes(x=vals))                                    # set up the ggplot with data
         p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
                                breaks=breaks,
@@ -132,19 +138,20 @@ renderPlot({
         p = p + stat_function(fun=dnorm, args=list(mean=mu, sd=std),          # add a layer with the Normal curve 
                               geom="line")
         p = p + annotate("segment",                                          # show the mean as a dashed line
-                         x=mu, xend=mu, y=0, yend=0.1,
+                         x=mu, xend=mu, y=0, yend=0.9 * ytop,
                          colour="darkorange1", size=1, linetype="dashed")
         p = p + annotate("segment",                                          # show standard deviations as dotted lines
                          x=c(mu-2*std, mu-std, mu+std, mu+2*std),
                          xend=c(mu-2*std, mu-std, mu+std, mu+2*std),
-                         y=c(0, 0, 0, 0), yend=c(0.1, 0.1, 0.1, 0.1),
+                         y=c(0), yend=c(0.9 * ytop),
                          colour="goldenrod", size=1, linetype="dotted")
         p = p + annotate("text",                                             # annotate the lines
                          x=c(mu-2*std, mu-std, mu, mu+std, mu+2*std),
-                         y=c(0.11, 0.11, 0.11, 0.11, 0.11),
+                         y=c(0.95 * ytop),
                          colour="darkorange3",
-                         label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
+                         label=c("µ - 2σ", "µ - σ", paste("µ=", format(round(mu, 2), nsmall=2)), "µ + σ", "µ + 2σ"))
         p = p + xlim(mu - max(5, 3 * std), mu + max(5, 3 * std))             # set x-axis limits
+        p = p + ylim(0, ytop)
         p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
         p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
                                                      color = figbg))
