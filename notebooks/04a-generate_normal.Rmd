@@ -33,6 +33,8 @@ figbg = "whitesmoke"
 
 # Introduction
 
+In most introductory treatments of statistics there is little focus on how statistical distributions 
+
 # Generating a Normal Distribution
 
 ## Create a dataset of values

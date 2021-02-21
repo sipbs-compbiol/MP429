@@ -41,3 +41,4 @@ The current versions of the notebook HTML pages are linked below, for convenienc
   - [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01a-sampling/)
 - [2. Exploring An Interesting Dataset](notebooks/02-explore.html)
 - [3. What is a Dataset?](notebooks/03-dataset.html)
+- [4. Where Do Statistical Distributions Come From?](notebooks/04-origins.html)

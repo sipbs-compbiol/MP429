@@ -25,22 +25,62 @@ figbg = "whitesmoke"
 
 <div id="summary">
 - Statistics is a science that aims to solve researchers' problems by analysing data
+  - The value of statistics is in giving quantitative answers to questions
+  - Whether the question is well-defined, or the statistical method well-chosen, is another matter.
 - This workshop aims to help you critically interpret literature and choose approaches for your own research, but does not focus on theory or mathematical formalism
-- The workshop is presented in a flipped style.
-  - You should read through the materials, attempt the exercises and optional interactive sections, and bring questions for discussion in the live online session.
-- You will need to use `RStudio` Desktop, installed on your own computer, for the optional interactive sections in these notebooks
-  - For interactive sections of the notebooks you will be asked to:
-    - decide which methods are appropriate for the given problem
-    - apply the methods
-    - interpret the answers you get
+- **The workshop is presented in a flipped style.**
+  - You should read through the materials, attempt the exercises and interactive sections, and bring questions for discussion in the live online session.
+- The interactive sessions can be attempted online, but you could also use `RStudio` Desktop, installed on your own computer.
 - **The live online session is for course material only. Technical questions about running `RStudio` will *not* be addressed at the live online session. Please email the workshop presenters beforehand if you need help with technical issues.**
 </div>
 
+> A major point, on which I cannot yet hope for universal agreement, is that our focus must be on questions, not models […] Models can - and will - get us into deep troubles if we expect them to tell us what the unique proper questions are. - J.W. Tukey (1977)
+
+
+
 # Why Do We Do Statistics?
 
-*Statistics* is a science that aims to solve problems mathematically, by representing and analysing *data*. Statistics is applicable to any field that collects data, including medicine, biology, chemistry, engineering, and social sciences. The nature of data can be complex, and there are always some practical questions that can only be answered by the application of statistical methods to that data.
+*Statistics* is a science that aims to solve problems and answer questions mathematically, by representing and analysing *data*. Statistics is applicable to any field that collects data, including medicine, biology, chemistry, engineering, and social sciences. The nature of data can be complex, and there are always some practical questions that can only be answered by the application of statistical methods and *models* to that data.
 
-## What Does Statistics Do?
+We are often concerned with the "truth" of some answer to our scientific questions: does the drug, when administered, produce a measurable effect? How much active compound is there in a mass-produced capsule? But statistical models are neither true nor false. They are tools, or *constructs*, that we have developed to enable us to answer our questions. But they are only tools. They are powerful tools, for sure, able to carry out exact calculations (nearly) the same way every time. But they are not *wise*. They do not know when the context is inappropriate. They do not know the meaning of your question. They are procedures that operate on data. They will give you answers, but they may not give you good answers, or the answer to the question you thought you were asking.
+
+Many courses will teach a "Hypothesis Testing Decision Tree," or something similar (see below). 
+
+![A Hypothesis Testing Decision Tree, linked from Pirk *et al.* (2013) *J. Apic. Res.* doi:10.3896/IBRA.1.52.4.13](https://www.researchgate.net/profile/Christian-Pirk/publication/256303889/figure/fig5/AS:392777901854729@1470656957861/A-basic-decision-tree-on-how-to-select-the-appropriate-statistical-test-is-shown_W640.jpg)
+
+These flowcharts do not encourage much in the way of thought about the underlying structures, models and processes of these methods, and imply that the small collection of tests will do for all circumstances (which is absolutely not true). They tend not to present any conceptual framework that helps researchers through the inevitable cases where the formulaic application of these flowcharts is inappropriate for the question being asked of the research. These classical statistical methods tend to be inflexible and fragile: unable to adapt to novel contexts not met by their assumptions; and failing in unpredictable ways when they meet those contexts.
+
+In this workshop, we aim to give you some insight and tools to help you understand common statistical methods you might encounter, why they were used and - occasionally - why they perhaps should not have been used. One of our goals is to encourage you to look past a rote application of "The Null Ritual" (as coined in [Gigerenzer (2004) *J. Socio-Econ.* doi:10.1016/j.socec.2004.09.033](https://doi.org/10.1016/j.socec.2004.09.033)):
+
+1. Set up a statistical null hypothesis of "no mean difference" or "zero correlation." Don't specify the predictions of your research hypothesis or of any alternative substantive hypotheses.
+2. Use 5% as a convention for rejecting the null. If significant, accept your research hypothesis. Report the result as *p*<0.05, *p*<0.07, or *p*<0.001 (whichever comes next to the obtained *p*-value).
+3. Always perform this procedure.
+
+<div id="warning">
+You will see this ritual practised mechanically in many published papers. It is a bad habit in science. 
+
+The Null Ritual is frequently observed in publications where Null Hypothesis Significance Testing (NHST) has been performed. We will explore NHST in more detail, and describe alternative approaches to both NHST and the Null Ritual during the workshop.
+</div>
+
+<div id="note">
+Ths workshop does not attempt to teach you the "right" way to do statistics, in the sense of "use tool X for problem Y". Fundamentally, there is no recipe for this, and there is no shortcut for understanding the question you wish to ask with your experiment, and whether your chosen statistical method will actually answer that question.
+
+We are instead trying to introduce some statistical thinking, in terms of understanding the bases of common statistical tools, their applications, and their limitations.
+
+**Whichever tool you use, understanding your own experiment and data or, if you're critically assessing someone else's research, understanding their experiment and data, should be the foundational starting point for all analyses.**
+</div>
+
+<details>
+  <summary>Click to toggle some advice about learning more about statistics</summary>
+If I were to recommend three tools to learn, and a book to learn them from, I would point you to Richard McElreath's *Statistical Rethinking*, which covers:
+
+1. Bayesian data analysis
+2. Multilevel models
+3. Model comparison using information criteria
+</details>
+
+
+# What Does Statistics Do?
 
 When researchers carry out experiments, they typically collect *data* for that experiment. This data usually involves at least two *measurements* of each of a number of individuals (or *experimental units*). Sometimes "individuals" means actual individual people, but it might also mean individual medications, groups of people, or something else, depending on context.
 
