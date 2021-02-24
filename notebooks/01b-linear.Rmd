@@ -120,11 +120,11 @@ The `RESAMPLE` button will choose a different set of "experimental" values that 
 <div id="questions">
 Use the interactive plot below to vary the values of each of these parameters, and explore the following questions:
 
-1. How good is the *fit* of the model as you vary the model parameters?
+1. How good is the *visual fit* of the model as you vary the model parameters?
 2. How do the residual plots vary, as you change model parameters?
-3. What does the residual plot look like, when you think you have found the best fit?
+3. What do the residual plots look like, when you think you have found the best fit?
 4. Does the line ever exactly match the data?
-5. Does the number of datapoints matter?
+5. Does the number of datapoints matter? Why?
 </div>
 
 ```{r model-interact, echo = FALSE}
@@ -199,7 +199,7 @@ fluidRow(
            p1 = p1 + geom_line(data=fit, aes(x=x, y=y), size=1, colour="darkorange3")
            p1 = p1 + annotate("segment",
                               x=data$x, xend=data$x,
-                              y=pmax(0, resids$y_line), yend=pmin(50, data$ym),
+                              y=pmin(50, pmax(0, resids$y_line)), yend=data$ym,
                               colour="goldenrod", line="solid", size=0.5)
            p1 = p1 + ylim(0, 50) + xlim(0, 22)
            p1 = p1 + xlab("measured variable") + ylab("response variable")        # add axis labels
