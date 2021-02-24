@@ -16,6 +16,7 @@ runtime: shiny
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(ggplot2)
+library(ggpubr)
 library(dplyr)
 
 # BG color for plots - should match .figure and .caption classes in rmd_style.css
@@ -23,11 +24,11 @@ figbg = "whitesmoke"
 ```
 
 <div id="summary">
-- Many relationships are determined statistically by *fitting* a *model* of the relationship
-- These statistical models are *approximations to*/*models of* the relationship between the data
-  - These models represent only a statistical relationship
-  - Models do not direcly imply a physical or mechanistic relationship between variables
+- Relationships between variables can be estimated statistically by *fitting* a *model* of the relationship
+- Statistical models are *approximations to*/*models of* the relationship between the data
+  - Models represent only a statistical relationship, they do not direcly demonstrate a physical or mechanistic relationship between variables
   - If a model is based on a mechanism derived through other means, the statistical relationship may lend support to that mechanism being plausible
+- The quality of fit of a model, and the uncertainty in the model's fit to the data, should always be reported.
 </div>
 
 # Introduction
@@ -84,15 +85,15 @@ p
 The linear regression is probably familiar to you. It is a very common instance of a *statistical model*. The usual way you might see a statistical model being used is:
 
 1. Obtain a dataset
-2. Propose a mathematical relationship between one or more measured variables and one or more response variables
-3. Find the *optimal* version of the proposed mathematical relationship using statistical and mathematical approaches
-4. Report the optimal version of the model, and your *uncertainty* about how "optimal" it is
+2. Propose a mathematical relationship between one or more measured variables and one or more response variables (this may be based on a *hypothesised* mechanism by which the *explanatory variable* produces the *response variable*)
+3. Find the *optimal* version of the proposed mathematical relationship using statistical and mathematical approaches - this is called *fitting* the model to the data
+4. Report the optimal version of the model, and the *uncertainty* about how "optimal" it is
 
 <div id="warning">
-Quite often, publications may forget to report step (4). It is best practice always to report the uncertainty in your model. You will notice that Figure \@ref(fig:model-relationship) does not report any uncertainty.
+Publications may sometimes forget to report step (4). It is best practice always to report the uncertainty in your model. You will notice that Figure \@ref(fig:model-relationship) does not report any uncertainty.
 </div>
 
-## What is the model
+## What is the model?
 
 In the case of Figure \@ref(fig:model-relationship) we have proposed a linear relationship. By *linear*, we mean that the relationship follows the equation of a straight line ($y = mx + c$) where $y$ is the response variable; $x$ is the measured variable; $m$ is the gradient of the line; and $c$ is the intercept on the $y$-axis (the value $y$ would take if $x$ were zero).
 
@@ -106,3 +107,176 @@ This is not the only possible model we could have fit to the data.
 3. Why do you think they might have fit better?
 </div>
 
+# An Interactive Model
+
+In the interactive plot below, you can use *sliders* to vary the parameters of a linear model, and see the effect of changing those parameters on the model *fit*.
+
+- The gradient of the model line
+- The intercept of the model line
+- Number of datapoints
+
+The `RESAMPLE` button will choose a different set of "experimental" values that give a different relationship between the *measured* and *response* variables.
+
+<div id="questions">
+Use the interactive plot below to vary the values of each of these parameters, and explore the following questions:
+
+1. How good is the *fit* of the model as you vary the model parameters?
+2. How do the residual plots vary, as you change model parameters?
+3. What does the residual plot look like, when you think you have found the best fit?
+4. Does the line ever exactly match the data?
+5. Does the number of datapoints matter?
+</div>
+
+```{r model-interact, echo = FALSE}
+h4("Model parameters")
+
+fluidRow(
+  column(3,
+         sliderInput("n_samples",
+                     "Number of datapoints:",
+                     min = 3,
+                     max = 100,
+                     value = 3)
+         ),
+  column(3,
+    sliderInput("m", label = "Line gradient:",
+                min = -3, max = 3, value = 0, step = 0.01)
+    ),
+
+  column(3,
+    sliderInput("c", label = "Line intercept:",
+                min = 0, max = 50, value = 25, step = 0.1)
+    ),
+  
+  column(3,
+    tags$table(style="width:100%",
+             tags$tr(tags$td(style="width:50%",
+                             align="center",
+                             valign="center",
+                             actionButton("redraw", "Resample"),
+                             ))
+    )
+  )
+)
+
+n_samples = 30       # number of measured samples
+
+# parameters for linear relationship
+slope = 1.7          # slope of relationship
+intcp = 5            # intercept of relationship
+
+# parameters for measurement noise; assumed to be Normally distributed
+# note, our representation of noise is also a model
+mu = 0               # mean measurement error
+std = 8              # standard deviation of measurement error
+
+dfm_data = eventReactive(c(input$redraw, input$n_samples),
+                         data.frame(x=runif(input$n_samples, 0.4, 20)) %>%
+                           mutate(y=(x * slope) + intcp) %>%
+                           mutate(ym = y + rnorm(input$n_samples, mu, std)),
+                         ignoreNULL=FALSE)
+
+dfm_resids = eventReactive(c(input$redraw, input$n_samples, input$m, input$c),
+                           data.frame(y_line=dfm_data()$x * input$m + input$c) %>%
+                             mutate(y_resid=dfm_data()$ym - y_line) %>%
+                             mutate(y_resid2=y_resid^2),
+                           ignoreNULL=FALSE)
+
+fluidRow(
+  column(12,
+         renderPlot({
+           data = dfm_data()
+           resids = dfm_resids()
+           
+           # generate x,y values for user-specified line
+           fit = data.frame(x=seq(0.4, 20, by=0.1)) %>%
+             mutate(y=((x * input$m) + input$c))
+           
+           # plot relationships and gradient
+           p1 = ggplot(data, aes(x=x, y=ym))
+           p1 = p1 + geom_point(colour="cornflowerblue")
+           # p = p + geom_ribbon(aes(ymin=lwr, ymax=upr), alpha=0.15)
+           p1 = p1 + geom_line(data=fit, aes(x=x, y=y), size=1, colour="darkorange3")
+           p1 = p1 + annotate("segment",
+                              x=data$x, xend=data$x,
+                              y=pmax(0, resids$y_line), yend=pmin(50, data$ym),
+                              colour="goldenrod", line="solid", size=0.5)
+           p1 = p1 + ylim(0, 50) + xlim(0, 22)
+           p1 = p1 + xlab("measured variable") + ylab("response variable")        # add axis labels
+           p1 = p1 + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                                          color = figbg))
+           p1
+           })
+         ), style="background-color: whitesmoke;"
+  )
+
+fluidRow(
+  column(4,
+    fluidRow(
+         renderPlot({
+           # generate "true" y values
+           data = dfm_data() %>% mutate(y=(x * slope) + intcp)
+           # generate "measured" y values
+           data = data %>% mutate(ym = y + rnorm(input$n_samples, mu, std))
+           # generate x,y values for user-specified line
+           fit = data.frame(x=seq(0.4, 20, by=0.1)) %>%
+             mutate(y=((x * input$m) + input$c))
+           
+           # Calculate residuals
+           resids = data.frame(y_line=data$x * input$m + input$c) %>%
+             mutate(y_resid=data$ym - y_line) %>%
+             mutate(y_resid2=y_resid^2)
+           
+           p3 = ggplot(resids, aes(x=y_resid))
+           p3 = p3 + geom_histogram(fill="cornflowerblue", bins=60)
+           p3 = p3 + xlim(min(-30, min(resids$y_resid)), max(30, max(resids$y_resid)))
+           p3 = p3 + xlab("residual") + ylab("count")        # add axis labels
+           p3 = p3 + theme(plot.background = element_rect(fill = figbg,
+                                                          color = figbg))
+           p3           
+         }, height=200)
+         )
+    ),
+
+  column(4,
+    fluidRow(
+         renderPlot({
+           data = dfm_data()
+           resids = dfm_resids()
+           
+           p2 = ggplot(resids, aes(x=y_resid2))
+           p2 = p2 + geom_histogram(fill="cornflowerblue", bins=60)
+           p2 = p2 + xlim(0, max(500, max(resids$y_resid2)))
+           p2 = p2 + xlab("residual^2") + ylab("count")        # add axis labels
+           p2 = p2 + theme(plot.background = element_rect(fill = figbg,
+                                                          color = figbg))
+           p2
+           }, height=200)
+         )
+    ),
+  
+  column(4,
+         fluidRow(
+           h5("Model Parameters and Residual Sums:"),
+           renderText({
+             paste("gradient = ", format(input$m, nsmall=2),
+                   ", intercept = ", format(input$c, nsmall=2))
+             }),
+           ),
+         
+         fluidRow(
+           renderText({
+             paste("sum of residuals: ", format(round(sum(dfm_resids()$y_resid), 2), nsmall=2))
+             }),
+           ),
+         
+         fluidRow(
+           renderText({
+             paste("sum of squares of residuals: ", format(round(sum(dfm_resids()$y_resid2), 2), nsmall=2))
+             }),
+           )
+         ), style="background-color: whitesmoke;"
+  )
+
+
+```
