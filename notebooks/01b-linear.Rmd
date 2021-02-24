@@ -1,0 +1,108 @@
+---
+title: "Exploring a Statistical Relationship"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output:
+  bookdown::html_document2:
+    css: css/rmd_style.css
+    theme: lumen
+    toc: yes
+    toc_float:
+      toc_collapsed: no
+    number_sections: yes
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(ggplot2)
+library(dplyr)
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
+```
+
+<div id="summary">
+- Many relationships are determined statistically by *fitting* a *model* of the relationship
+- These statistical models are *approximations to*/*models of* the relationship between the data
+  - These models represent only a statistical relationship
+  - Models do not direcly imply a physical or mechanistic relationship between variables
+  - If a model is based on a mechanism derived through other means, the statistical relationship may lend support to that mechanism being plausible
+</div>
+
+# Introduction
+
+In the first notebook ("Why Do We Do Statistics"), Figure 3.2 showed a plot of a *response variable* against a *measured variable*, and a linear regression on that data. This is reproduced below as Figure \@ref(fig:model-relationship).
+
+
+```{r model-relationship, echo = FALSE, fig.cap="Thirty datapoints indicating a relationship between a measured variable and a response variable. Datapoints are shown as blue dots. The relationship is modelled by the orange straight line (obtained with linear regression) that has gradient and intercept as shown in the figure. The model simplifies our representation of the noisy relationship between the measured and response variables."}
+n_samples = 30       # number of measured samples
+
+# parameters for linear relationship
+slope = 1.7          # slope of relationship
+intcp = 5            # intercept of relationship
+
+# parameters for measurement noise; assumed to be Normally distributed
+# note, our representation of noise is also a model
+mu = 0               # mean measurement error
+std = 8              # standard deviation of measurement error
+
+# generate x values
+data = data.frame(x=runif(n_samples, 0.4, 20))
+# generate "true" y values
+data = data %>% mutate(y=(x * slope) + intcp)
+# generate "measured" y values
+data = data %>% mutate(ym = y + rnorm(n_samples, mu, std))
+
+# predict linear relationship
+fitlm = lm(ym ~ x, data=data)       # fit a straight line
+m_coeff = fitlm$coefficients[2]     # gradient
+c_coeff = fitlm$coefficients[1]     # intercept
+data$predlm = predict(fitlm)        # add datapoints corresponding to line
+predslm = predict(fitlm, interval="confidence")  # obtain confidence intervals
+data = cbind(data, predslm)         # complete dataset
+
+# plot relationships
+p = ggplot(data, aes(x=x, y=ym))
+p = p + geom_point(colour="cornflowerblue")
+#p = p + geom_ribbon(aes(ymin=lwr, ymax=upr), alpha=0.15)
+p = p + geom_line(aes(y=predlm), size=1, colour="darkorange3")
+p = p + annotate("text",                                             # annotate the model
+                 x=2,
+                 y=40,
+                 hjust=0,
+                 colour="darkorange3",
+                 label=paste("gradient = ", format(round(m_coeff, 2), nsmall=2),
+                             ", intercept = ", format(round(c_coeff, 2), nsmall=2)))
+p = p + xlab("measured variable") + ylab("response variable")        # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+
+p
+```
+
+The linear regression is probably familiar to you. It is a very common instance of a *statistical model*. The usual way you might see a statistical model being used is:
+
+1. Obtain a dataset
+2. Propose a mathematical relationship between one or more measured variables and one or more response variables
+3. Find the *optimal* version of the proposed mathematical relationship using statistical and mathematical approaches
+4. Report the optimal version of the model, and your *uncertainty* about how "optimal" it is
+
+<div id="warning">
+Quite often, publications may forget to report step (4). It is best practice always to report the uncertainty in your model. You will notice that Figure \@ref(fig:model-relationship) does not report any uncertainty.
+</div>
+
+## What is the model
+
+In the case of Figure \@ref(fig:model-relationship) we have proposed a linear relationship. By *linear*, we mean that the relationship follows the equation of a straight line ($y = mx + c$) where $y$ is the response variable; $x$ is the measured variable; $m$ is the gradient of the line; and $c$ is the intercept on the $y$-axis (the value $y$ would take if $x$ were zero).
+
+$$\textrm{response variable} = m \times \textrm{measured variable} + c$$
+
+<div id="questions">
+This is not the only possible model we could have fit to the data.
+
+1. What other models can you think of that we might have tried to fit?
+2. Do you think any of those models might have fit better than the *linear* model?
+3. Why do you think they might have fit better?
+</div>
+

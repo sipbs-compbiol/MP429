@@ -29,7 +29,7 @@ figbg = "whitesmoke"
 
 # Introduction
 
-In the first notebook ("Why Do We Do Statistics"), Figure 2.1 showed a Normal distribution, and some data that were sampled from that normal distribution. This is reproduced below as Figure 1.1.
+In the first notebook ("Why Do We Do Statistics"), Figure 3.1 showed a Normal distribution, and some data that were sampled from that normal distribution. This is reproduced below as Figure \@ref(fig:model-normal).
 
 ```{r model-normal, echo=FALSE, fig.cap="Two hundred measured data values (histogram) and the corresponding Normal distribution model (curve) of those values. The modelled distribution is entirely described by the parameters: mean=10 (µ) and standard deviation=3 (σ). We can see here that the frequency of real data values don't match the curve exactly; the model simplifies our representation of the 'noisy' data. The dashed line represents the mean value of the model, and the dotted lines represents values at +/- one and two standard deviations from the mean."}
 mu = 10                          # define mean of distribution
