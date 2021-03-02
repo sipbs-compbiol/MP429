@@ -40,6 +40,6 @@ The current versions of the notebook HTML pages are linked below, for convenienc
 - [1. Why Do We Do Statistics?](notebooks/01-statistics.html)
   - [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01a-sampling/)
   - [1b. Exploring a Statistical Relationship **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01b-linear/)  
-- [2. Exploring An Interesting Dataset](notebooks/02-explore.html)
-- [3. What is a Dataset?](notebooks/03-dataset.html)
+- [2. What is a Dataset?](notebooks/02-dataset.html)
+- [3. Exploring An Interesting Dataset](notebooks/03-explore.html)
 - [4. Where Do Statistical Distributions Come From?](notebooks/04-origins.html)
