@@ -22,8 +22,6 @@ library("readr")
 figbg = "whitesmoke"
 ```
 
-# Introduction
-
 <div id="summary">
 - Data is typically collected into tables where rows are observations, and columns are variables
 - Variables may be numerical or categorical
@@ -33,7 +31,9 @@ figbg = "whitesmoke"
 - **The kind of data you have should guide your choice of statistical and visualisation approaches.**
 </div>
 
-# What is a dataset?
+# Introduction
+
+## What is a dataset?
 
 It might be an unhelpful definition, but a dataset is just a set of data.
 

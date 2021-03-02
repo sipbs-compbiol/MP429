@@ -30,8 +30,6 @@ gvhd = read_delim("../assets/data/gvhd.dat", delim="\t",
 figbg = "whitesmoke"
 ```
 
-# Introduction
-
 <div id="summary">
 - We look at an example dataset from a clinical study
   - The study aimed to identify key risk factors for developing Graft-versus-Host-Disease (GvHD)
@@ -39,10 +37,10 @@ figbg = "whitesmoke"
   - The study examined the influence of six *explanatory variables*
 - Scatterplots are useful to compare two continuous numerical variables
 - Boxplots are useful to compare the numerical outputs for two categorical explanatory variables
-- Pairs plots give a quick visual overview of the data
+- A pairs plot can give a quick visual overview of a dataset
 </div>
 
-# The Dataset
+# Introduction
 
 This notebook explores a dataset representing a study of bone marrow transplantation in leukaemia patients, published in:
 
