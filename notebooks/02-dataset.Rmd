@@ -37,7 +37,7 @@ figbg = "whitesmoke"
 
 It might be an unhelpful definition, but a dataset is just a set of data.
 
-You have already seen an example dataset (`gvhd`) in notebook 2. In this notebook, we will consider features of a dataset that make it useful for scientific analyses, and characteristics of data that will guide your choice of statistical approach.
+In this notebook, we will explore features of a dataset that make it useful for scientific analyses, and characteristics of data that may guide a choice of statistical approach.
 
 Data comes in many forms, but in science we nearly always want our data to be well-organised. To organise our data, we typically collect it into *tables* (in the `R` language, these are referred to as `dataframes`, you may also see them called *matrices* or *tables*). These are two-dimensional data structures, with *rows* and *columns*, and this allows us to deal with two important and distinct concepts about data: *observations* and *variables* (variables may also be sreferred to as *features*, or *measurements*)
 
@@ -70,7 +70,7 @@ By convention, we represent data in *tables* so that *rows* represent *observati
 
 ![Example table showing the layout of observations, variables, and measurements](../assets/images/obs_var_table.png)
 
-The interactive widgets below show some example datasets.
+The interactive tables below show some example datasets.
 
 ### The `iris` dataset
 
@@ -82,7 +82,9 @@ The `iris` dataset describes morphological variation of the flowers (the lengths
 datatable(iris)
 ```
 
-We can visualise the relationships in the variables with a pairs plot, as we did in notebook 2.
+We can visualise relationships between the variables with a pairs plot.
+
+This gives us a rich visual overview of the relationships in our dataset.
 
 ```{r iris-pairs, echo=FALSE, fig.cap="Pairs plot of `iris` data, providing an overview of relationships between variables.", fig.width=10, fig.height=10}
 p = ggpairs(iris)                                             # create pairs plot for all iris data
@@ -90,6 +92,12 @@ p = p + theme(plot.background = element_rect(fill = figbg,    # colour backgroun
                                              color = figbg))
 p                                                             # show plot
 ```
+
+<div id="questions">
+1. Which variables appear to distinguish between iris species?
+2. Which variables look like they are correlated?
+</div>
+
 
 ### The Pima Diabetes Dataset
 
@@ -117,14 +125,12 @@ p                                                             # show plot
 <div id="questions">
 1. How many observations are there in the `pima` dataset?
 2. How many variables are there in the `iris` dataset?
-3. Do the pairs plots appear to suggest any potential problems with either dataset?
+3. Do the pairs plots appear to suggest any potential problems with either the `iris` or `pima` dataset?
 </div>
 
 # Types of variable
 
-When analysing an experiment, especially when critically reviewing someone else's work, it is very important to understand the dataset. The type and quantity of data determine what kinds of analyses and interpretations are valid, and how confident we should be in our analysis results.
-
-There are two main types of data: numerical and categorical
+When analysing an experiment, especially when critically reviewing someone else's work, it is very important to understand the dataset. There are two main types of data: numerical and categorical
 
 ## Numerical Data
 
@@ -138,7 +144,7 @@ But it's a little more complicated than that.
 
 This might be the first kind of numerical data that comes to mind. Measurements like length, mass, concentration, and time, can be represented by [*real numbers*](https://en.wikipedia.org/wiki/Real_number). The important characteristic of *real numbers* and therefore *continuous data* is that, in principle, any number can be represented to an arbitrary level of precision.
 
-Although our ability to measure things is limited in practice (e.g. a 30cm ruler might not be able to measure a distance smaller than 1mm accurately), it's the ability of the *property* to take on one of these values that matters. For instance, with a kitchen timer we might not be able to time a 100m sprint more accurately than the nearest second; but the runners could finish at any time between consecutive ticks of the clock (e.g. at 14.461723884756325347s exactly). 
+Although our ability to measure things is limited in practice (e.g. a 30cm ruler might not be able to measure a distance smaller than 1mm accurately), it's the ability of the *property* to take on one of these values that matters. For instance, with a kitchen timer we might not be able to time a 100m sprint more accurately than the nearest second; but the runners could finish at any time between consecutive ticks of the clock (e.g. at 14.461723884756325347s exactly, even if we only measure 14.46s on a stopwatch). 
 
 <div id="note">
 It is not our ability to measure precisely that makes the data *continuous*, it is the nature of the *thing being measured*.
@@ -176,7 +182,7 @@ Other categories however may have an implicit ranking - like "large", "medium", 
 
 ### Ordinal Data
 
-In a competition, individuals might finish first, second, third and so on. These rankings are often treated as numbers, but they are in fact *categories*, and they are categorical data. We might consider that those who finish first are "better" or "more" in some way than those who finish second or third. There is a natural ordering to these categories, which we want to consider in our analyses - but we can't rightly treat `1`, `2` and `3` as the whole numbers $1$, $2$ and $3$ - they are instead more like labels.
+In a competition, individuals might finish first, second, third and so on. These rankings are often treated as numbers, but they are in fact *categories*, and they are categorical data. We might consider that those who finish first are "better" or "more" in some way than those who finish second or third. There is a natural ordering to these categories, which we want to consider in our analyses - but we can't rightly treat `1`, `2` and `3` as the whole numbers $1$, $2$ and $3$ - they are instead treated as labels.
 
 Similarly, we often divide populations into age ranges, rather than using an accurate age. These ranges are categories too, and there is an implicit ordering: "70+" is *older than* "55-70" is *older than* "45-55". Here, the categories are ordered, but they are not the same size, and we can't treat them as numerical values without taking more care.
 
@@ -184,9 +190,11 @@ Likewise, we might divide disease symptoms into "none", "mild", "severe", and "c
 
 ### Coding
 
-Categorical data is often *coded*. This means that the categories are assigned numbers as labels. Each discrete category gets a different number (a bit like the Dewey decimal system in a library, or IP addresses on the internet). The numbers don't necessarily relate to the size, strength, or superiority of a category, but are just convenient ways of representing different things in a table.
+Categorical data is often *coded*. This means that the categories are assigned numbers as labels. Each discrete category gets a different number (a bit like the Dewey decimal system in a library, matriculation numbers, or IP addresses on a computer network). The numbers don't necessarily relate to the size, value, or measure of a category. The codes are just convenient ways of representing different things in a table.
 
+<div id="note">
 By convention we often take `1` implicitly to mean "true" or "present", and `0` to mean "false" or "absent".
+</div>
 
 <div id="questions">
 1. What kind of data is in the `iris` dataset?
