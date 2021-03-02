@@ -111,3 +111,7 @@ blockquote {
     content: "Caution:";
     padding-left: 25px;
 }
+
+details {
+    background-color: linen;
+}
