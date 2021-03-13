@@ -64,33 +64,33 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
 p                                                                    # show plot
 ```
 
-This plot shows a *Normal Distribution* as the black curve. This Normal Distribution is one of several common statistical distributions, and is a *model* of the actual data that was measured. It is used so often because it provides a very good approximate model for many practical situations, such as experimental measurements.
+This plot shows a *Normal Distribution* as the black curve. This Normal Distribution is one of several common statistical distributions, and is a *model* of the actual data that was measured. It is used so often because it provides a very good approximate model for many practical situations, such as experimental observations of a value.
 
 The black curve in Figure 1.1 describes a distribution of data that has a particular *mean* (central value), and *standard deviation* (dispersion). It represents how we would expect our measured data data to look if it were produced by the model; the curve shows the probability with which we could expect to see each measured data value.
 
 <div id="note">
 - In our measured data we should expect to see values that are close to the mean more frequently than those that are distant from the mean.
-- The standard deviation describes *how* frequently we should expect to see values that are distant from the mean.
+- The standard deviation describes *how* frequently we should expect to see values that are a particular distance from the mean.
 </div>
 
-The measured data itself is shown as the histogram. Each bar in the histogram indicates how often a value in the *range* of the bar (e.g. one bar might represent measurements with values between 16 and 16.5) was measured. In an ideal world we might expect the measured data to correspond exactly to the model, so that each histogram bar would stop just as it touched the black curve. However, nature has randomness, or *stochasticity*, so the measured data very rarely follows the shape of a statistical distribution exactly. The model is an *approximation* to the data.
+The observed data itself is shown as the histogram. Each bar in the histogram indicates how often a value in the *range* of the bar (e.g. one bar might represent measurements with values between 16 and 16.5) was observed In an ideal world we might expect the observed data to correspond exactly to the model, so that each histogram bar would stop just as it touched the black curve. However, nature has randomness, or *stochasticity*, as do measurements made by humans and machines, so the measured data very rarely follows the shape of a statistical distribution exactly. The model is an *approximation* to the data.
 
 # An Interactive Distribution
 
-In the interactive plot below, you can use *sliders* to vary three key parameters relating measured data to a Normal Distribution:
+In the interactive plot below, you can gain some intuition about the relationships between an observed dataset, its size, and the corresponding Normal distribution (its mean and standard deviation). Use the *sliders* to vary three key parameters relating measured data to a Normal Distribution:
 
 - The number of measured datapoints
 - The mean of the Normal distribution, $\mu$. This is considered the distribution's *central value*.
 - The standard deviation of the Normal distribution, $\mu$. This represents the distribution's *dispersion*.
 
-The `RESAMPLE` button will choose a different set of "experimental" values that give the same Normal distribution, at the currently-selected slider settings.
+The `RESAMPLE` button will choose a different set of "observed" values that belong to the same Normal distribution, with parameters being the currently-selected slider settings.
 
 <div id="questions">
 Use the interactive plot below to vary the values of each of these parameters, and explore the following questions:
 
 1. How well does the *fit* of the curve match the dataset as you vary the number of measured datapoints?
 2. Does the curve ever exactly match the histogram data?
-3. How did you decide whether the curve fit the histogram well, or poorly?
+3. How did you decide, for yourself, whether the curve fit the histogram well, or poorly?
 4. How does changing the mean of the distribution affect the shape of the curve?
 5. How does changing the standard deviation of the distribution affect the shape of the curve?
 </div>

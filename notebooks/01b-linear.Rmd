@@ -26,13 +26,13 @@ figbg = "whitesmoke"
 <div id="summary">
 - Relationships between variables can be estimated statistically by *fitting* a *model* of the relationship
 - Statistical models are *approximations to*/*models of* the relationship between the data
-  - Models represent only a statistical relationship, they do not direcly demonstrate a physical or mechanistic relationship between variables
-  - If a model is based on a mechanism justified in other ways, the statistical relationship may lend support to that mechanism being plausible (or refute it…)
-- For a given model, the optimal parameterisation is the one that fits the data best; but the optimal model is not necessarily the one that fits the data best.
+  - Models represent only a statistical relationship, they do not directly demonstrate a physical or mechanistic relationship between variables
+  - If a model is based on a mechanism justified in other ways, the statistical relationship may lend support to that mechanism being plausible (or maybe refute it…)
+- For a given model, the optimal parameterisation is the one that fits the data best; but that model may not be the one that fits the data best.
 - **The quality of fit of a model, and the uncertainty in the model's fit to the data, should always be reported.**
-- There are two kinds of uncertianty for a model fit:
+- There are two kinds of uncertainty for a model fit:
   - Uncertainty that the model describes the data (goodness of fit)
-  - Uncertainty that the "best" parameters are optimal (confidence intervals in the parameters)
+  - Uncertainty that the "best" parameters of a specific model are optimal (confidence intervals in the parameters)
 </div>
 
 # Introduction
@@ -89,12 +89,12 @@ p
 Linear regression is probably familiar to you. It is a very common instance of a *statistical model*. The usual way you might see a statistical model being used is:
 
 1. Obtain a dataset
-2. Propose a mathematical relationship between one or more explanatory variables and one or more response variables (this may be based on a hypothesised mechanism by which the *explanatory variable* produces the *response variable*)
+2. Propose a mathematical relationship between one or more explanatory variables and one or more response variables (this may be based on a hypothesised mechanism by which the *explanatory variable* produces the *response variable*, such as the Michaelis-Menten model for enzymes)
 3. Find the *optimal* version of the proposed mathematical relationship using statistical and mathematical approaches to choose the "best" model parameters - this is called *fitting* the model to the data
 4. Report the optimal version of the model, and the *uncertainty* about how "optimal" it is
 
 <div id="warning">
-Publications may sometimes forget to report step (4). It is best practice always to report the uncertainty in your model. You will notice that Figure \@ref(fig:model-relationship) does not report any uncertainty - but Figure \@ref(fig:model-cis) does.
+Publications may sometimes forget to report step (4). **It is best practice always to report the uncertainty in your model**. You will notice that Figure \@ref(fig:model-relationship) does not report any uncertainty - but Figure \@ref(fig:model-cis) does.
 </div>
 
 ## What is the model?
@@ -103,17 +103,23 @@ In the case of Figure \@ref(fig:model-relationship) we have proposed a linear re
 
 $$\textrm{response variable} = m \times \textrm{explanatory variable} + c$$
 
+<div id="note">
+If we were exploring the relationship between exposure to sunlight and plant growth, we might *interpret* these parameters so that $m$ = "average additional growth per hour of sunlight", and $c$ = "average baseline growth in the absence of sunlight."
+
+We could use the same model to fit datasets from other experiements; the mathematical processes would be the same, even though the numbers and *interpretation* would be different.
+</div>
+
 <div id="questions">
 This is not the only possible model we could have fit to the data.
 
 1. What other models can you think of that we might have tried to fit?
-2. Do you think any of those models might have fit better than the *linear* model?
-3. Why do you think they might have fit better?
+2. Do you think any of those models might have fit better than this *linear* model?
+3. Why do you think they might have fit better - or not?
 </div>
 
 # An Interactive Model
 
-In the interactive plot below, you can use *sliders* to vary the parameters of a linear model, and see the effect of changing those parameters on the model *fit*.
+In the interactive plot below, you can gain some intuition about how the size of a dataset affects the ability to fit a linear model, and what a "good fit" looks like. Use the *sliders* to vary the parameters of a linear model, and see the effect of changing those parameters on the model *fit*.
 
 - The gradient of the model line
 - The intercept of the model line
@@ -126,10 +132,10 @@ The blue points represent the "experimental" data, the thick orange line is the 
 <div id="questions">
 Use the interactive plot below to vary the values of each of these parameters, and explore the following questions:
 
-1. How well does the model appear to describe the data (how good is the *visual fit* of the model) as you vary the model parameters?
+1. How well does the model appear to describe the data (how good is the *visual fit* of the model) as you vary the model parameters, and how do you decide whether a fit is "good" or "bad"?
 2. How do the residual plots vary, as you change model parameters?
 3. What do the residual plots look like, when you think you have found the best fit?
-4. How do the residual and variance values change as your model appears to fit better?
+4. How do the residual and variance values change as your model appears to fit "well" or "poorly"?
 5. Does the line ever exactly match the data?
 6. Does the number of datapoints matter? Why do you think that?
 </div>
@@ -327,19 +333,19 @@ Looking at the graph above, it's natural to think that a "better" fit of a model
 <div id="warning">
 We are talking here about alternative parameters for the *same model*, not deciding whether one model is better than another. These processes are different.
 
-For instance, we could form an equation that would make a line pass through every measured response value ("Connecting Lines" in the cartoon below). It would *fit* the data perfectly. But it may not be a good description of the mechanism that relates the *explanatory variable* to the *response variable*. For good science we require that our models are *plausible* and useful. Models should represent and maybe help explain important features of reality; but we don't expect them to perfectly explain data.
+For instance, we could form an equation that would make a line pass through every measured response value ("Connecting Lines" in the cartoon below). It would *fit* the data perfectly. But it may not be a good description of the mechanism that relates the *explanatory variable* to the *response variable*. For good science we require that our models are *plausible* and useful. Models should represent and maybe help explain important features of reality; but we don't expect them to *perfectly* explain data.
 
-We should always try to fit *plausible* models; we should **not** always try to find a model that fits perfectly, and then attempt to bend our understanding of reality to explain features of the model.
+We should always try to fit *plausible* models; we should **not** always try to find a model that fits perfectly, and then attempt to bend our understanding of reality to explain why  the choice of model.
 
 ![XKCD 2048: Curve-fitting methods and the messages they send](https://imgs.xkcd.com/comics/curve_fitting.png)
 </div>
 
 In the exercise above, it is unlikely that you could have found a straight line that passed through all the sampled datapoints. But you probably found many lines that appeared to describe the data about as well as each other. These probably had gradients near a value of 1.7 and intercepts near a value of 5.
 
-Visually, you would have seen that the "good" fits of the line had *residuals* that fell above and below the line - the line passed through "the middle" of the dataset. You probably noticed that the sizes of the residuals/lengths of the lines varied; there were probably more short lines than long lines.
+Visually, you would have seen that the "good" fits of the line had *residuals* that fell above and below the line - the line passed through "the middle" of the dataset. You probably noticed that the sizes of the residuals (and lengths of the lines) varied; there were probably more short lines than long lines.
 
 <div id="note">
-We should expect that measurements of a value - such as the explanatory or response variables - are not exact. There may be variation in the system being measured, and there will also be *error* in most measurements. For example, when weighing out a compound, the exact mass of a compound might fall between the levels of precision of the balance: the balance may report a mass of 1.4356g, but the true mass is 1.43563.
+We should expect that measurements of a value - such as the explanatory or response variables - are not exact. There may be variation in the system being measured, and there will also be *error* in most measurements. For example, when weighing out a compound, the exact mass of a compound might fall between the levels of precision of the balance: the balance may report a mass of 1.4356g, but the true mass could be 1.43563.
 
 Generally, the best we can expect is that a model produces predictions that are *close to* observations of the response variable.
 </div>
@@ -347,7 +353,7 @@ Generally, the best we can expect is that a model produces predictions that are 
 <details>
   <summary>Click to toggle a short explanation of how residuals relate to optimal parameters</summary>
   
-In general, we choose the "best" or *optimal* parameters for a model by finding the parameters that result in the smallest difference between the predicted model result (the straight line) and the observed data. Mathematically, we can use the values of the residuals to calculate this. In *linear least squares regression* we find the best fit by minimising the *sum of squares of residuals*. This is equivalent to finding the line that has the smallest overall difference between its predictions, and the actual measured values. You probably found that your best fit line had the smallest sum of squares of residuals you could get.
+In general, we choose the "best" or *optimal* parameters for a model by finding the parameters that result in the smallest difference between the predicted model result (the straight line) and the observed data. Mathematically, we can use the values of the residuals to calculate this. In *linear least squares regression* we find the best fit by minimising the *sum of squares of residuals*. This is equivalent to finding the line that has the smallest overall difference between its predictions, and the actual measured values. You probably found that your best fit line had the smallest sum of squares of residuals you could get by moving the sliders.
 </details>
 
 ### Representing model uncertainty: Pearson correlation coefficients, $r^2$, and variability
@@ -358,11 +364,11 @@ You will probably have come across the idea of a *correlation coefficient* befor
 
 #### Goodness of fit
 
-It is unusual in the natural world, and in experiments, to find perfect linear correlation between any two variables. This is in part because because measurements always involve uncertainty, and in part because natural systems tend not to be homogeneous - they are often collections of slightly different individuals; or a single individual may vary slightly over time. If there was truly a linear relationship between two variables, in a real system we wouldn't see a straight line exactly - we would see datapoints scattered about a straight line. The datapoints would not be exactly correlated and, as a result, we find the observed $r^2$value for two variables is usually between 0 and 1.
+It is unusual in the natural world, and in experiments, to find perfect linear correlation between any two variables. This is in part because because measurements always involve uncertainty, and in part because natural systems tend not to be homogeneous - they are often collections of slightly different individuals; or a single individual may vary slightly over time. If there was truly a linear relationship between two variables, in a real system we wouldn't see a straight line exactly - we would see datapoints scattered about a straight line. The datapoints would not be exactly correlated and, as a result, we find the observed $r^2$value for two variables is usually between 0 and 1, but not exactly 0 or 1.
 
 When we fit a model to some observed data for two variables, as with the linear model above, we are attempting to explain the relationship between those variables. But even if we have the exact true model of the relationship, the natural *variability* of the system and the measurements we make means our model will not be an exact fit. To assess the quality or *uncertainty* of our model fit, we consider how well our optimal model choice *explains* the *variability* in the dataset.
 
-We think of the dataset as having some quantity that measures its overall *variability*. For a linear model we can represent that by the way each measured *response variable* differs from the average value for the response variables; we call this the **total variability**. We can calculate a similar value for the values of the response variable predicted by our *fitted* linear model; this is the **model variability**. We can then compare these values:
+We think of the dataset as having some quantity that measures its overall *variability* (also referred to as *spread* or *dispersion*). For a linear model we can represent that by the way each measured *response variable* differs from the average value for the response variables; we call this the **total variability**. We can calculate a similar value for the values of the response variable predicted by our *fitted* linear model; this is the **model variability**. We can then compare these values:
 
 $$\textrm{goodness of fit} \approx \frac{\textrm{model variability}}{\textrm{total variability}}$$
 
@@ -370,10 +376,10 @@ $$\textrm{goodness of fit} \approx \frac{\textrm{model variability}}{\textrm{tot
 - If the model doesn't describe the data exactly, then *model variability* is less than the *total variability*, our *goodness of fit* is less than 1, and we say that the model "explains some of the variability in the data."
 
 <div id="note">
-We often use the *goodness of fit* as a percentage. For instance, if our goodness of fit is 0.73, we would say "the model explains 73% of the variance in the dataset."
+The *goodness of fit* is often used as a percentage. For instance, if our goodness of fit is 0.73, we might say "the model explains 73% of the variance in the dataset."
 </div>
 
-This value, *goodness of fit* or *explained variance* represents uncertainty in the model fit. It recognises that although this is the "optimal" fit for a model with this structure, there is still variability in the data that goes unexplained. Without doing more work, we can't know whether that variability could be captured by improving the model (to represent the mechanism of the system being studied better) or if this is truly *irreducible variability* caused by randomness in measurement, or stochastic variation in the system. 
+This value, *goodness of fit* or *explained variance*, represents uncertainty in the model fit. It recognises that although this is the "optimal" fit for a model with this structure, there is still variability in the data that goes unexplained. Without doing more work, we can't know whether that variability could be captured by improving the model (to represent the mechanism of the system being studied better) or if this is truly *irreducible variability* caused by inexact measurement, or stochastic variation in the system. 
 
 This measure represents the uncertainty we have that our model describes the data well.
 
@@ -385,11 +391,11 @@ You probably noticed that when you found your optimal model, this value was that
 
 ### Representing model uncertainty: Parameter estimates
 
-When you explored the interactive model, you probably found that - even if there was an obviously optimal choice - there were several choices of gradient and intercept that gave reasonably good results. Maybe you thought that, if the data had been slightly different, one of those other pretty good choices might have been "optimal?"
+When you explored the interactive model, you probably found that - even if there was an obviously optimal choice - there were several choices of gradient and intercept that gave reasonably good results. Maybe you thought that, if the data had been even slightly different, one of those other pretty good choices might have been "optimal?"
 
 This is a different kind of uncertainty than the uncertainty represented by *goodness of fit* above. It does not represent our uncertainty that the "optimal" model describes the data. Instead it represents the *uncertainty we have that we found the optimal model, at all*.
 
-Typically, we represent this uncertainty with *confidence intervals* for each parameter of the model. Here we would need a confidence interval for the fitted gradient, and a confidence interval for the fitted intercept. We might also represent this uncertainty in the form of a *ribbon* on our graph showing the fitted model, as below in Figure \@ref(fig:model-cis). The ribbon shows the area covered by all of the *plausible* lines that could fit our data - all the lines that could be described by parameter settings in the 95% confidence intervals.
+Typically, we represent this uncertainty with *confidence intervals* for each parameter of the model. Here we would need a confidence interval for the fitted gradient, and a confidence interval for the fitted intercept. We might also represent this uncertainty in the form of a *ribbon* on our graph showing the fitted model, as below in Figure \@ref(fig:model-cis). The ribbon shows the area covered by all of the *plausible* lines that could fit our data. Here, *plausible* lines are all the lines that could be described by parameter settings in the 95% confidence intervals.
 
 ```{r model-cis, echo = FALSE, fig.cap="Thirty datapoints indicating a relationship between an explanatory variable and a response variable. Datapoints are shown as blue dots. The relationship is modelled by the orange straight line (obtained with linear regression) that has gradient and intercept as shown in the figure. The uncertainty in our fitted model parameters is shown as a ribbon representing a 95% confidence interval for the fitted line."}
 n_samples = 30       # number of measured samples
