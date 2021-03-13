@@ -1,0 +1,387 @@
+---
+title: "An Introduction to Data Visualisation"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    number_sections: true
+    css: "css/rmd_style.css"
+    theme: lumen
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library("DT")
+library("dplyr")
+library("ggplot2")
+library("ggridges")
+library("readr")
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
+
+# Colour scheme for misleading data
+colors <- c("#779977", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#CCCCCC")
+
+# Misleading data
+mean = c(9.5, 9.75)
+sd = c(.25, .25)
+key = c("AvrX", "AvrY")
+
+misleading_data_bar = data.frame(mean, sd, key)
+misleading_data_bar$sd_min = mean - sd
+misleading_data_bar$sd_max = mean + sd
+```
+
+<div id="summary">
+</div>
+
+# Introduction
+
+The amount of data being generated and processed in biological sciences is increasing rapidly, and as a scientist you will have to work with this data. Data visualisation is a tool that allows us to summarise, understand, and explore our - sometimes incredibly large - datasets intuitively, without being overwhelmed by numbers.  In this workshop, we will focus on common approaches by which data can and should be summarised visually, with an emphasis on best practice. Data visualisation is a broad topic that touches on elements of colour theory, psychology, graphic design, and several other fields that we sadly don't have time to explore, here. But we will provide links to help you learn more about this area, in your own time.
+
+## Storytelling
+
+Data visualisation is not often just a simple rendering of the data. Fundamentally, data visualisation is a method of communication, and it is worth thinking of it as a form of storytelling, and similar to writing. We may as scientists have specific goals for data exploration, such as to maximise patterns that may indicate correlation between variables - to tell *ourselves* a story from the data. When writing reports and papers, we want to share what *we* see in the data with our reader. We want to tell *them* a story in pictures, to share our mental model with them.
+
+There are strong similarities to storytelling with words. For instance, there is a grammar to visual information (called [*gestalt principles*](https://www.toptal.com/designers/ui/gestalt-principles-of-design)), just as there is a grammar to written language. As humans we have evolved to use this grammar to recognise patterns in what we see, including visual images on the page, and interpret them as having meaning. We can use those natural, innate tendencies to recognise and interpret patterns to make understanding and interpretation of data almost effortless for the reader.
+
+![Pareidolia: the human brain incorrectly interprets images to have meaning even when there is no meaning present. This Martian mesa appears to have a face but, regardless of what any YouTube documentaries might tell you, there is in fact no face. Image by NASA (Public Domain)](https://upload.wikimedia.org/wikipedia/commons/7/77/Martian_face_viking_cropped.jpg)
+
+<div id="warning">
+It is also possible to use these natural ways that we interpret data to mislead people - accidentally or otherwise. We will see some examples of this.
+
+If you know that it is possible to be misled by visual representation, you will be better able to spot bad graphics in papers.
+</div>
+
+Here's a story as it might appear in a presentation or a paper, told with a single figure:
+
+### A story: "AvrY induces chlorosis more strongly than AvrX"
+
+> We measured chlorosis in 30 plants after the application of either AvrX or AvrY. The figure demonstrates that the induction of chlorosis was stronger for AvrY than for AvrX.
+
+```{r misleading-01, echo=FALSE, fig.width=3, fig.height=3, fig.cap="Bar chart showing effect of chlorosis due to application of AvrX and AvrY"}
+data.barplot1 = ggplot(misleading_data_bar, aes(x = key, y = mean)) +
+  geom_bar(stat = "identity", aes(fill = key, alpha = .5)) +
+  #geom_errorbar(aes(ymin = sd_min, ymax = sd_max), width = 0.25, lwd=1) +
+  coord_cartesian(ylim=c(9.25, 10), expand = FALSE) +
+  scale_fill_manual(values = c(colors[[1]], colors[[6]])) +
+  xlab("") +
+  ylab("Chlorosis") +
+  theme_classic() +
+  theme(axis.line.y = element_line(), legend.position = "none", legend.key = element_blank(),
+        text=element_text(size=12), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        legend.title = element_blank(), axis.text.y = element_blank(),
+        panel.background = element_rect(fill = figbg, color = figbg),
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+data.barplot1
+```
+
+<div id="questions">
+1. What conclusions can you draw from Figure \@ref(fig:misleading-01)?
+2. What information is present in Figure \@ref(fig:misleading-01)?
+3. What information do you need that is not present in Figure \@ref(fig:misleading-01)?
+</div>
+
+As it stands we dont know what the chlorosis measurements are, which means we can't interpret them as "strong" or "weak", and we can't tell how different the values are for AvrX and AvrY. We can improve this plot by indicating what quantities are meant by the bars in the chart, adding values on the y-axis:
+
+```{r misleading-02, echo=FALSE, fig.width=3, fig.height=3, fig.cap="Bar chart showing effect of chlorosis due to application of AvrX and AvrY, with observed chlorosis values indicated on the y-axis"}
+data.barplot2 = ggplot(misleading_data_bar, aes(x = key, y = mean)) +
+  geom_bar(stat = "identity", aes(fill = key, alpha = .5)) +
+  #geom_errorbar(aes(ymin = sd_min, ymax = sd_max), width = 0.25, lwd=1) +
+  coord_cartesian(ylim=c(9.25, 10), expand = FALSE) +
+  scale_fill_manual(values = c(colors[[1]], colors[[6]])) +
+  xlab("") +
+  ylab("Chlorosis") +
+  theme_classic() +
+  theme(axis.line.y = element_line(), legend.position = "none", legend.key = element_blank(),
+        text=element_text(size=12), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        legend.title = element_blank(),
+        panel.background = element_rect(fill = figbg, color = figbg),
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+data.barplot2
+```
+
+<div id="questions">
+1. What conclusions can you draw from Figure \@ref(fig:misleading-02) that couldn't be drawn from Figure \@ref(fig:misleading-01)?
+2. Is Figure \@ref(fig:misleading-02) a fair representation of the data?
+</div>
+
+Now we can read off the chart that AvrX has a value of 9.5 and AvrY has a value of about 9.75. If we knew more about chlorosis, we could now tell if this was a strong or a weak effect.
+
+But there is something not right about this graphic. The blue bar looks to be twice the size of the green block, yet the difference between values is only $\frac{0.25}{0.95} = 2.5\%$! It would be fairer to start the y-axis at zero, to show the absolute difference between observed values:
+
+```{r misleading-03, echo=FALSE, fig.width=3, fig.height=3, fig.cap="Bar chart showing effect of chlorosis due to application of AvrX and AvrY, with the y-axis starting at zero, and values marked"}
+data.barplot3 = ggplot(misleading_data_bar, aes(x = key, y = mean)) +
+  geom_bar(stat = "identity", aes(fill = key, alpha = .5)) +
+  #geom_errorbar(aes(ymin = sd_min, ymax = sd_max), width = 0.25, lwd=1) +
+  coord_cartesian(ylim=c(0, 10), expand = FALSE) +
+  scale_fill_manual(values = c(colors[[1]], colors[[6]])) +
+  xlab("") +
+  ylab("Chlorosis") +
+  theme_classic() +
+  theme(axis.line.y = element_line(), legend.position = "none", legend.key = element_blank(),
+        text=element_text(size=12), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        legend.title = element_blank(),
+        panel.background = element_rect(fill = figbg, color = figbg),
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+data.barplot3
+```
+
+<div id="questions">
+1. What conclusions can you draw from Figure \@ref(fig:misleading-03) that couldn't be drawn from Figure \@ref(fig:misleading-02)?
+2. Does Figure \@ref(fig:misleading-03) tell the same story as Figure \@ref(fig:misleading-02)?
+3. Is there anything else we still need to know?
+</div>
+
+<div id="warning">
+When we read the literature, it is tempting to skim over papers and "read the figures," trusting that they tell an unbiased and fair story about the data. **That is not always true.** Figures should be read at least as carefully as the text.
+</div>
+
+There is one more thing we need to make proper sense of the figure. At the moment, the values for AvrX and AvrY are presented as single values: one *location* for each gene. But we saw at the start of the story that 30 plants were measured:
+
+> We measured chlorosis in 30 plants after the application of either AvrX or AvrY. The figure demonstrates that the induction of chlorosis was stronger for AvrY than for AvrX.
+
+It's unlikely that all of the measurements for each gene were identical. We would assume that there has been some *spread* of data around that location. This spread is commonly represented with error bars.
+
+```{r misleading-04, echo=FALSE, fig.width=3, fig.height=3, fig.cap="Bar chart showing effect of chlorosis due to application of AvrX and AvrY, with the y-axis starting at zero, values marked on that axis, and error bars indicating standard deviation"}
+data.barplot4 = ggplot(misleading_data_bar, aes(x = key, y = mean)) +
+  geom_bar(stat = "identity", aes(fill = key, alpha = .5)) +
+  geom_errorbar(aes(ymin = sd_min, ymax = sd_max), width = 0.25, lwd=1) +
+  coord_cartesian(ylim=c(0, 10.5), expand = FALSE) +
+  scale_fill_manual(values = c(colors[[1]], colors[[6]])) +
+  xlab("") +
+  ylab("Chlorosis") +
+  theme_classic() +
+  theme(axis.line.y = element_line(), legend.position = "none", legend.key = element_blank(),
+        text=element_text(size=12), panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        legend.title = element_blank(),
+        panel.background = element_rect(fill = figbg, color = figbg),
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+data.barplot4
+```
+
+<div id="questions">
+1. What conclusions can you draw from Figure \@ref(fig:misleading-04) that couldn't be drawn from Figure \@ref(fig:misleading-04)?
+2. Does Figure \@ref(fig:misleading-04) tell the same story as Figure \@ref(fig:misleading-03)?
+3. Is there anything else we might still want to know?
+</div>
+
+<div id="note">
+As it happens, there is more that we might want to know, and you can explore this in the interactive session at the link below:
+
+- [3a. Better tools than bar charts **INTERACTIVE SESSION**]()
+</div>
+
+# Numerical data
+
+Wherever possible, it is usually best to show original numerical data as completely as possible. This may mean showing each datapoint or observation individually. If that is not possible or desirable, then there are several options for showing the distribution of the data as an *explicit model* of the data (such as a [histogram](https://en.wikipedia.org/wiki/Histogram), a [cumulative distribution function (CDF)](https://en.wikipedia.org/wiki/Cumulative_distribution_function) or [kernel density estimate (KDE)](https://en.wikipedia.org/wiki/Kernel_density_estimation)), or a summary of the data (e.g. a [box plot/box-and-whisker plot](https://en.wikipedia.org/wiki/Box_plot)). In general, your preference should be:
+
+1. Show all datapoints
+2. Show an explicit model of the data (e.g. a CDF, KDE, or [violin plot](https://en.wikipedia.org/wiki/Violin_plot))
+3. Show a summary of the data (e.g. a box plot) 
+
+<div id="note">
+**A histogram is not the same thing as a bar chart.**
+
+- [Histogram](https://en.wikipedia.org/wiki/Histogram): a representation of the distribution of numerical data
+- [Bar Chart](https://en.wikipedia.org/wiki/Bar_chart): heights or lengths associated with categorical variables
+</div>
+
+<div id="warning">
+I strongly discourage the use of bar charts to represent numerical data distributions. The reasons for this are reported in the literature:
+
+1. People interpret bar graphs as comparisons of discrete datapoints (Zacks & Tverskey)
+2. The same bar graph can be generated from multiple very different data sets (Weissgerber *et al.*), potentially disguising significant differences in the data
+3. Bar graphs are intended to represent categorical variables, not numerical, paired or nonindependent data (by definition)
+4. Presentations of error bars imply that data are Normally distributed, which may not be true (Weissgerber *et al.*), causing wrong statstical inferences to be drawn
+
+> Zacks, J. & Tversky, B. (1999) "Bars and Lines: A Study of Graphic Communication" *Mem. Cognit.* [https://doi.org/10.3758/bf03201236](https://doi.org/10.3758/bf03201236)
+>
+> Weissgerber, T. *et al.* (2015) "Beyond Bar and Line Graphs: Time for a New Data Presentation Paradigm" *PLoS Biol.* [https://doi.org/10.1371/journal.pbio.1002128](https://doi.org/10.1371/journal.pbio.1002128)
+</div>
+
+
+## Visualisations for a continuous variable
+
+### Univariate (1D) Scatterplot
+
+In a univariate scatterplot, datapoints are plotted against a single numerical axis, with the other axis showing the identity of the dataset. This allows all values in a dataset to be shown, which is the most transparent way of presenting the data to the reader. 
+
+Where there is potential for overlap of datapoints, their locations can be "jittered" - moved slighlty in a horizontal and/or vertical direction - in order to make the number of datapoints at each value clearer. It is however not always possible to interpret the *density* of datapoints very well, so thisrepresentation is best combined with a summary of the distribution that conveys this information also.
+
+```{r 1d-scatterplot, echo=FALSE, fig.cap="Univariate (1D) scatterplot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Species, y=Sepal.Length, color=Species)) +
+  geom_jitter(width=0.1, height=0) +
+  scale_color_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+For the `iris` sepal length data in Figure \@ref(fig:1d-scatterplot), we can see that the distributions of this variable overlap for each species, and that there is a possible *outlier* in the *I. virginica* data. The nature of the data is also evident: the datapoints are regularly-spaced, and we can see where there are relatively few or many datapoints.
+
+### Violin plot
+
+```{r violinplot, echo=FALSE, fig.cap="Violin plot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Species, y=Sepal.Length, fill=Species)) +
+  geom_violin() +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+### Box Plot/Box-and-Whisker Plot
+
+Boxplots represent distributions of continous variables. The box represents the first, second and third [*quartiles*](https://en.wikipedia.org/wiki/Quartile) of the dataset, and the *whiskers* extend to $1.5 \times \textrm{IQR}$, where $\textrm{IQR}$ is the [*interquartile range*](https://en.wikipedia.org/wiki/Interquartile_range) of the data. The red dot indicates an *outlier*. Here, that means any value in the dataset that lies outwith $1.5 \times \textrm{IQR}$.
+
+<details>
+  <summary>Click to toggle information about quartiles.</summary>
+  
+Quartiles are obtained by taking each value in the data and sorting them from smallest to largest value, in an ordered list. The quartiles are then the values at one quarter (25%, first quartile), halfway (50%, second quartile) and three-quarters (75%, third quartile) along the list. The *second quartile* is the same thing as the *median*.
+
+The *interquartile range* (IQR) is the difference between the first and third quartiles, i.e. $\textrm{third quartile} - \textrm{first quartile}$
+</details>
+
+```{r boxplot, echo=FALSE, fig.cap="Boxplot/box-and-whisker plot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Species, y=Sepal.Length, fill=Species)) +
+  geom_boxplot(outlier.color="red") +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+<div id="warning">
+**Outliers** are datapoints that appear to be quite different from the rest of the observations for that variable. This is often taken to be a warning sign, and outliers need to be handled with care. They can arise by a number of different means:
+
+- Measurement error (e.g. the number was written down incorrectly, or a device was uncalibrated)
+- Experimental error (e.g. some solution was prepared at the wrong concentration)
+- The distribution of the data does not meet assumptions about interquartile range (i.e. extreme values are more commmon than assumed)
+- Other problems with the experimental design, or the theory behind the experiment
+
+**Outliers should not be deleted from the dataset unless they are caused by experimental or recording error.**
+</div>
+
+
+### Histogram
+
+```{r hist, echo=FALSE, fig.cap="Stacked density plot/Joyplot/Ridgeplot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Sepal.Length, fill=Species)) +
+  geom_histogram(alpha=0.7, color="black", position="identity", binwidth=0.1) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+
+```{r hist_dodged, echo=FALSE, fig.cap="Stacked density plot/Joyplot/Ridgeplot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Sepal.Length, fill=Species)) +
+  geom_histogram(alpha=0.7, color="black", position="dodge") +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+
+```{r hist_facet, echo=FALSE, fig.cap="Stacked density plot/Joyplot/Ridgeplot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Sepal.Length, fill=Species)) +
+  geom_histogram(alpha=0.7, color="black", position="identity") +
+  scale_fill_brewer(palette="Set1") +
+  facet_wrap(~Species) +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+### KDE/Density plot
+
+```{r kdeplot, echo=FALSE, fig.cap="Stacked density plot/Joyplot/Ridgeplot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Sepal.Length, fill=Species)) +
+  geom_density(alpha=0.7) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+
+### Stacked Density Plot/Joyplot/Ridgeplot
+
+```{r joyplot, echo=FALSE, fig.cap="Stacked density plot/Joyplot/Ridgeplot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(y=Species, x=Sepal.Length, fill=Species)) +
+  geom_density_ridges(alpha=0.7) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+### Combining Plots
+
+```{r boxscatter, echo=FALSE, fig.cap="Boxplot/box-and-whisker plot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Species, y=Sepal.Length, fill=Species)) +
+  geom_boxplot(outlier.shape=NA) +
+  geom_jitter(width=0.1, height=0) + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+```{r violinscatter, echo=FALSE, fig.cap="Boxplot/box-and-whisker plot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris, aes(x=Species, y=Sepal.Length, fill=Species)) +
+  geom_violin() +
+  geom_jitter(width=0.1, height=0) + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+### Bar Chart
+
+For completeness, we include a bar chart with error bars showing standard deviation of each dataset.
+
+```{r barchar, echo=FALSE, fig.cap="Boxplot/box-and-whisker plot of sepal length for each species from the `iris` dataset, with jitter."}
+p = ggplot(iris %>% group_by(Species) %>% summarise(val=mean(Sepal.Length),
+                                                    sd_min=mean(Sepal.Length) - sd(Sepal.Length),
+                                                    sd_max=mean(Sepal.Length) + sd(Sepal.Length)),
+           aes(x=Species, y=val, fill=Species)) +
+  geom_bar(stat="identity") +
+  geom_errorbar(aes(ymin = sd_min, ymax = sd_max), width = 0.25, lwd=1) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = figbg, color = figbg))
+
+p
+```
+
+## Relationships between two numerical variables
+
+
+# "I Want To Know More!"
+
+Bang Wong's series of "Points of View" articles in *Nature Methods* are an excellent and clearly-written entry point covering many areas of data visualisation.
+
+- ["Points of View"](http://blogs.nature.com/methagora/2013/07/data-visualization-points-of-view.html)
