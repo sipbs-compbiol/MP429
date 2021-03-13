@@ -78,7 +78,7 @@ Statistics is applicable to any field that collects data, including medicine, bi
 <div id="note">
 We are often concerned with the "truth" of some answer to our scientific questions. For instance does our drug, when administered, produce a measurable effect? How much active compound should we expect to find in each mass-produced capsule?
 
-But statistical models are neither true nor false. They are tools, or *constructs*, that we have developed to enable us to answer our questions. But they are only tools. They are powerful tools, for sure, able to carry out exact calculations (nearly) the same way every time. But they are not *wise*. They do not know when the context they are being used in is inappropriate. They do not know what your question was or even what question you really meant to ask. They are procedures that operate on data. They will give you answers, but they may not give you good answers, or even the answer to the question you thought you were asking.
+But statistical models are neither true nor false. They are tools, or *constructs*, that we have developed to enable us to answer our questions. They are powerful tools, for sure, able to carry out exact calculations (nearly) the same way every time. But they are not *wise*. They do not know when the context they are being used in is inappropriate. They do not know what your question was or even what question you really meant to ask. They are procedures that operate on data. They will give you answers, but they may not give you good answers, or even the answer to the question you thought you were asking. A large part of the skill of statistics is framing an appropriate question, and understanding which *tool* is appropraite for that question.
 </div>
 
 ## The hypothesis-testing decision tree
@@ -87,17 +87,17 @@ Many courses will teach a "Hypothesis Testing Decision Tree," or something simil
 
 ![A Hypothesis Testing Decision Tree, image linked from Pirk *et al.* (2013) *J. Apic. Res.* doi:10.3896/IBRA.1.52.4.13](https://www.researchgate.net/profile/Christian-Pirk/publication/256303889/figure/fig5/AS:392777901854729@1470656957861/A-basic-decision-tree-on-how-to-select-the-appropriate-statistical-test-is-shown_W640.jpg)
 
-These flowcharts do not encourage much in the way of thought about the underlying structures, models and processes of these methods. Some people might see this flowchart and think that the small collection of tests shown in it will do for all circumstances (which is absolutely not true). A flowchart like this doesn't present any conceptual framework that helps researchers through the inevitable cases where a formulaic application following the arrows is inappropriate for the question being asked of the research.
+These flowcharts do not encourage much in the way of thought about the underlying structures, models and processes of these methods. Some people might see this flowchart and think that the small collection of tests shown in it will do for all circumstances (which is not true).
 
-In fact, these classical statistical methods also tend to be inflexible and fragile: unable to adapt to novel contexts not met by their assumptions; and failing in unpredictable ways when they meet those contexts. These novel contexts arise fairly frequently in research, and the flowcharts don't tell you where the boundaries of applicability are.
+The classical statistical methods shown in these flowcharts are often appropriate, but can sometimes be inflexible and fragile: unable to adapt to novel contexts not met by their assumptions; and failing in unpredictable ways when they meet those contexts. These novel contexts may arise in your research, and flowcharts like these don't tell you where the boundaries of applicability are. This is why it is important to understand your question, your data, and the methods themselves.
 
 ## Statistics is a toolbox, not a hammer
 
 Statistics is a toolbox containing many tools that will make your life easier if you know when they should be used. 
 
-In this workshop, we aim to give you some intuition, insight and tools to help you understand common statistical methods you might encounter, why they are used and - occasionally - why they perhaps should not have been used. It's perhaps true that you can't truly understand a statistical approach unless you understand the mathematics behind it - and sometimes the computational implementation, too - but you can get a long way by exploring examples. We hope to help you explore enough examples that you can follow the reasoning behind the use of statistical approaches, and know when to use them yourself.
+In this workshop, we aim to give you some intuition, insight and tools to help you understand common statistical methods you might encounter, why they are used and - occasionally - why they perhaps should not have been used. It's perhaps true that you can't truly understand a statistical approach unless you understand the mathematics behind it - and sometimes the computational implementation, too - but you can get a long way by exploring examples. We hope to help you explore enough examples that you can follow the reasoning behind the use of statistical approaches, and know when to use them yourself. The flowchart above is, in some ways, a toolbox containing only hammers.
 
-One of our goals is to encourage you to look beyond a rote application of "The Null Ritual" (coined in [Gigerenzer (2004) *J. Socio-Econ.* doi:10.1016/j.socec.2004.09.033](https://doi.org/10.1016/j.socec.2004.09.033)), as though it's a hammer and every problem is a nail to be hammered down. The tests in the hypothesis-testing decision tree can be used in this way. That flowchart is, in some ways, a toolbox containing only hammers.
+One of our goals is to encourage you to look beyond a rote application of "The Null Ritual" (coined in [Gigerenzer (2004) *J. Socio-Econ.* doi:10.1016/j.socec.2004.09.033](https://doi.org/10.1016/j.socec.2004.09.033)), as though it's a hammer and every problem is a nail to be hammered down.
 
 The Null Ritual runs like this: 
 
@@ -159,7 +159,7 @@ In all questions, whether for understanding or prediction, we rely on *modelling
 
 ### Representing data with a model
 
-Firstly, although we measure data in our experiments, some statistical approaches do not use the raw data directly to calculate their result. Instead, they use the data to calculate values that are *parameters* of a *distribution* (e.g. *mean* and *standard deviation*), such as a Normal or Poisson distribution. The corresponding distribution is an idealised *model* of the measurements, and it simplifies our calculations to use these models to represent our data, in place of the actual individual datapoints. 
+Firstly, although we measure data in our experiments, some statistical approaches (called *parametric* methods) do not use the raw data directly to calculate their result. Instead, they use the data to calculate values that are *parameters* of a *distribution* (e.g. *mean* and *standard deviation*), such as a Normal or Poisson distribution. The corresponding distribution is an idealised *model* of the measurements, and it simplifies our calculations to use these models to represent our data, in place of the actual individual datapoints. 
 
 <div id="note">
 If you have ever performed a *t*-test or similar statistical analysis, based on the means and standard deviations of two datasets, you were doing exactly this!
@@ -174,7 +174,9 @@ Statistical approaches can be computationally expensive. So, before computationa
 Today, computationally-expensive approaches like Monte Carlo methods and Bayesian statistics have been made much more accessible, and are readily applied to more complex datasets and questions than could be used with the classical methods.
 </details>
 
-A key concern in statistics is ensuring that the choice of model distribution to represent an experimental dataset is appropriate, and we will spend some time in the workshop notebooks exploring how common distributions represent data. In Figure \@ref(fig:model-normal) below, we can see a curve describing the expected distribution of frequencies of values for a Normal distribution, and a single dataset of 200 datapoints sampled from that distribution. Notice that the sampled data does not follow the shape of the curve exactly.
+A key concern in *parametric* methods is ensuring that the choice of model distribution to represent an experimental dataset is appropriate, and we will spend some time in the workshop notebooks exploring how common distributions represent data. In Figure \@ref(fig:model-normal) below, we can see a curve describing the expected distribution of frequencies of values for a Normal distribution, and a single dataset of 200 datapoints sampled from that distribution. Notice that the sampled data does not follow the shape of the curve exactly.
+
+Statistical methods that use the data directly and do not represent it as an idealised model are called *nonparametric* methods. You will meet both kinds of approach in this workshop.
 
 ```{r model-normal, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Normal distribution model (curve) generating those values. The modelled distribution is entirely described by the parameters: mean=10 (µ) and standard deviation=3 (σ). We can see here that the frequency of real data values don't match the curve exactly; the model simplifies our representation of the 'noisy' data. The dashed line represents the mean value of the model, and the dotted lines represents values at +/- one and two standard deviations from the mean."}
 mu = 10                          # define mean of distribution
@@ -222,7 +224,7 @@ In this session, you can explore the way in which the parameters of a statistica
 
 One strategy for choosing a distribution to represent your data is to plot a histogram of that data and, by looking at it, choose an appropriately-shaped distribution that looks "similar". In his book *Statistical Rethinking*, Richard McElreath refers to this as "Histomancy", by analogy to haruspicy, necromancy and other fake magic arts that claimed to disclose hidden truths by looking at entrails, or speaking with the dead.
 
-As you will have seen from the interactive session, even data that is drawn specifically from a Normal Distribution does not always look like a Normal Distribution when presented as a histogram. In general, it may very well be that a given choice of distribution is good or poor, but the appropriateness cannot be determined by examining histograms, or by guesswork. We need to apply sound principles to our choice of statistical methods, and this workshop will attempt to give you some intuitions about those choices.
+As you will have seen from the interactive session, even data that is drawn specifically from a Normal Distribution does not always look like a Normal Distribution when presented as a histogram. In general, it may very well be that a given choice of distribution is good or poor, but the appropriateness cannot be determined only by examining histograms, or by guesswork. We need to apply sound principles to our choice of statistical methods, and this workshop will attempt to give you some intuitions about those choices.
 </div>
 
 ### Representing a relationship with a model
@@ -233,7 +235,7 @@ Secondly, the actual relationship between explanatory and response variables can
 A researcher's choice of model (and of statistical method) embodies a set of beliefs about the processes that generated their data. In effect, they represent the researchers' beliefs about the natural world or, at least, about the experiment that was performed.
 </div>
 
-```{r model-relationship, echo = FALSE, fig.cap="Thirty datapoints indicating a relationship between a measured variable and a response variable. Datapoints are shown as blue dots. The relationship is modelled by the orange straight line (obtained with linear regression) that has gradient and intercept as shown in the figure. The model simplifies our representation of the noisy relationship between the measured and response variables."}
+```{r model-relationship, echo = FALSE, fig.cap="Thirty datapoints indicating a relationship between an explanatory variable and a response variable. Datapoints are shown as blue dots. The relationship is modelled by the orange straight line (obtained with linear regression) that has gradient and intercept as shown in the figure. The model simplifies our representation of the noisy relationship between the measured and response variables, and implies that the researcher believes the relationship between the explanatory and response variables is best described by a straight line."}
 n_samples = 30       # number of measured samples
 
 # parameters for linear relationship
@@ -272,14 +274,14 @@ p = p + annotate("text",                                             # annotate 
                  colour="darkorange3",
                  label=paste("gradient = ", format(round(m_coeff, 2), nsmall=2),
                              ", intercept = ", format(round(c_coeff, 2), nsmall=2)))
-p = p + xlab("measured variable") + ylab("response variable")        # add axis labels
+p = p + xlab("explanaotry variable") + ylab("response variable")        # add axis labels
 p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
                                              color = figbg))
 
 p
 ```
 
-Much of statistical analysis of *relationships* between variables is about estimating the values of parameters for these models, and exploring the implications of the resulting parametrised models.
+Much of statistical analysis of *relationships* between variables is about estimating (or *fitting*) the values of parameters for these models, and exploring the implications of the *fitted* parameters resulting parametrised models.
 
 <div id="note">
 Please take some time to explore a statistical relationship interactively in your browser, at the link below.
