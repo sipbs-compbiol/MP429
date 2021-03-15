@@ -144,7 +144,7 @@ p = p + geom_histogram(aes(y=..density..),                           # add a his
                        fill="cornflowerblue", color="black")
 p = p + geom_point(data=data.frame(x=breaks, y=dbinom(breaks, size, prob)),
                    aes(x=x, y=y),
-                   size=7,
+                   size=7, alpha=0.6,
                    color="darkorange3")
 p = p + annotate("segment",                                          # show the expected value as a dashed line
                  x=size * prob, xend=size * prob,
@@ -179,7 +179,7 @@ p = p + geom_histogram(aes(y=..density..),                           # add a his
 p = p + geom_point(data=data.frame(x=breaks,
                                    y=dnbinom(breaks, size=size, prob=prob)),
                    aes(x=x, y=y),
-                   size=7,
+                   size=7, alpha=0.6,
                    color="darkorange3")
 p = p + annotate("segment",                                          # show the expected value as a dashed line
                  x=expect, xend=expect,
@@ -245,7 +245,7 @@ p = p + geom_histogram(aes(y=..density..),                           # add a his
 p = p + geom_point(data=data.frame(x=breaks,
                                    y=dpois(breaks, lambda=lambda)),
                    aes(x=x, y=y),
-                   size=7,
+                   size=7, alpha=0.6,
                    color="darkorange3")
 p = p + annotate("segment",                                          # show the expected value as a dashed line
                  x=expect, xend=expect,
