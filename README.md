@@ -27,7 +27,7 @@ In addition, the materials require the following `R` packages:
 - [`DT]() for interactive data tables in standalone HTML pages
 - [`plotly`]() for interactive graphs in standalone HTML pages
 
-and these can be installed from `RStudio` by opening the script and clicking on the `Run` button, or from the command-line using:
+and these can be installed from `RStudio` by opening the `install.R` script and clicking on the `Run` button, or from the command-line using:
 
 ```bash
 Rscript install.R
