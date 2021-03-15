@@ -33,6 +33,7 @@ figbg = "whitesmoke"
   - Events occuring at a set average rate produce two distributions
     - The Exponential Distribution represents the probability that a process will take a certain amount of time to complete
     - The Poisson Distribution represents the probability that a process will complete a certain number of times in a given period
+- **These distributions are used as models of real data, in *parametric tests***
 </div>
 
 # Introduction
@@ -52,7 +53,7 @@ This notebook summarises common statistical distributions, and links out to inte
   - These distributions are good for studying process that may take a variable amount of time to reach an end point, such as survival data
 </div>
 
-This notebook provides static information, and you will get the most out of it if you follow the links to the interactive examples to see how we can generate each of these distributions.
+This notebook provides static information, and you will get the most out of it if you follow the links to the interactive examples to see how each distribution can be generated from a simple process.
 
 
 # The Normal Distribution
@@ -107,13 +108,20 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
 p                                                                    # show plot
 ```
 
-Features of the Normal distribution include that there is a single "peak" (it is unimodel), and this peak occurs at the *mean* value of the distribution (which is also the *median* value of the distribution). The distribution is also symmetrical about the mean.
+Important features of the Normal distribution include:
+
+- the Normal distribution is *continuous*
+- there is a single "peak" (the distribution is unimodal)
+- the peak occurs at the *mean* value of the distribution
+  - the peak is also at the *median* value of the distribution
+  - the mean, median and mode are all identical
+- the distribution is left-right symmetrical about the mean.
 
 <div id="note">
 - The *location* of a Normal distribution is described by its mean (µ)
 - The *spread* of a Normal distribution is described by its standard deviation (σ)
 
-The earlier interactive session allowed you to explore the way in which the parameters of a statistical distribution alter its shape, and how well it appears to represent measured data.
+The earlier interactive session allowed you to explore the way in which the parameters of a statistical distribution alter its shape, and how well it appears to represent observed data.
 
 - [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01a-sampling/)
 </div>
@@ -130,10 +138,33 @@ You should check all necessary assumptions before performing a statistical test 
 
 # The Binomial Distribution
 
-```{r model-binom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of trials n=30, and probability of success p=3. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected (mean) value of the model."}
+Many other natural random processes are not *continuous*, but have discrete outcomes. For instance, a coin toss can be only Heads or Tails - there are no intermediate values. A coin toss is an event that can have only one of two possible outcomes, and many experiments are set up in this way - with an outcome that is either "success" (Heads) or "failure" (Tails). The statistics of coin tosses are a good substitute for the statistics of these kinds of experiments.
+
+Coin tosses are an example of a *Binomial (two-number) Experiment*, also known as a *Bernoulli Trial*. These kinds of processes have the following properties:
+
+- There are two and only two outcomes for each experiment (or trial). Call these "success" and "failure."
+- The experiment is repeated a number of times, $n$
+- Each experiment's results are completely independent of the others (i.e. no individual experiment's result influences any of the others)
+- The probability of any single experiment being a success is represented as $p$, and the probability of failure is $1 = 1 - p$.
+
+<div id="note">
+There are two *parameters* for this process: the number of trials $n$, and the probability of success on any individual trial, $p$.
+</div>
+
+For a fair coin, $p = q = 0.5$, and we can flip it $n=30$ times, to obtain three different outcomes, calling `T` for Tails, and `H` for Heads:
+
+- `r sample(c("H","T"), size=30, prob=c(0.5, 0.5), replace=TRUE)`
+- `r sample(c("H","T"), size=30, prob=c(0.5, 0.5), replace=TRUE)`
+- `r sample(c("H","T"), size=30, prob=c(0.5, 0.5), replace=TRUE)`
+
+Each of these runs is independent, and gives us a potentially different number of successes (Heads), each time.
+
+The *Binomial Distribution* is the pattern we get if we repeat runs with this number of coin tosses with this fair coin an infinite number of times, and count successes. Figure \@ref(fig:model-binom) shows the binomial distribution for 30 tosses of a fair coin (orange dots), and the pattern we get from 200 runs of tossing that coin 30 times (blue bars).
+
+```{r model-binom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of trials n=30, and probability of success p=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected (mean) value of the model."}
 size = 30
-prob = 0.1
-breaks = 0:20      # set up the breakpoints between bars in the histogram
+prob = 0.5
+breaks = 0:30      # set up the breakpoints between bars in the histogram
 
 dfm_hist = data.frame(vals=rbinom(200, size, prob))               # create a data frame
 
@@ -160,6 +191,11 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
                                              color = figbg))
 p                                                                    # show plot
 ```
+
+<div id="note">
+The Binomial Distribution is *discrete*  - only whole numbers (integers) of successes are produced.
+</div>
+
 
 # The Negative Binomial Distribution
 
