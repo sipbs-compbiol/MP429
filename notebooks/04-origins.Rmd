@@ -1,0 +1,263 @@
+---
+title: "Where Do Statistical Distributions Come From?"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    number_sections: true
+    css: "css/rmd_style.css"
+    theme: lumen
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library("ggplot2")
+library("latex2exp")
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
+```
+
+<div id="summary">
+- Statistical distributions are models of real processes
+- The different distributions you meet represent distinct processes, or alternative measurements of those processes
+- Each distribution represents the expected probability outcome of an infinite number of repeated actions
+  - We can model these processes to obtain statistical distributions
+  - Normal distributions represent the expected distribution of an infinite number of measurements of a real value
+  - An infinite number of coin tosses produces two distributions
+    - The Binomial Distribution represents how many heads (or tails) we should expect to occur in a certain number of tosses
+    - The Negative Binomial Distributions represents how many coin tosses we would expect to make in order to obtain a certain number of heads (or tails)
+  - Events occuring at a set average rate produce two distributions
+    - The Exponential Distribution represents the probability that a process will take a certain amount of time to complete
+    - The Poisson Distribution represents the probability that a process will complete a certain number of times in a given period
+</div>
+
+# Introduction
+
+Statistical distributions, such as the Normal, Binomial, and Poisson distributions are often presented in statistical texts without an explanation of their origins, or what they represent. This is unfortunate, as knowing the *processes* that generate a distribution gives insight into how, why, and when those distributions are useful and appropriate for an analysis.
+
+This notebook summarises common statistical distributions, and links out to interactive sessions that illustrate how statistical distributions are generated from simple processes. Specifically:
+
+<div id="note">
+- Normal distributions are produced when we make the repeated measurements (or *estimates*) of a quantity
+  - Normal distributions are good for estimating measurement errors, and the "true mean" values of observations
+
+- Binomial and Negative Binomial distributions are produced when we count positive and negative outcomes in a series of tests
+  - These distributions are good for studying trials or tests with binary outcomes (e.g. "success" or "failure")
+
+- Exponential and Poisson distributions are produced when processes take an average amount of time to complete
+  - These distributions are good for studying process that may take a variable amount of time to reach an end point, such as survival data
+</div>
+
+This notebook provides static information, and you will get the most out of it if you follow the links to the interactive examples to see how we can generate each of these distributions.
+
+
+# The Normal Distribution
+
+The Normal Distribution (also known as the *Gaussian Distribution* or *Bell Curve*) is probably the most common statistical distribution you will meet. Many statistical methods *assume* that the data being fed into them is Normally-distributed (or, at least, that the errors involved in measuring the data that are fed into them are Normally-distributed). Due to the many ways in which Normal distributions can arise, this is often a reasonable assumption to make. Among the ways in which data tends to form a Normal distribution are:
+
+- repeated physical measurements of the same thing
+  - here, the errors in measurement are randomly-distributed, but tend to more frequently be close to the true measurement than far from it; the shape made by the repeated measurement is often Normal
+- repeatedly estimating the mean of a population by calculating the means of random subsamples
+  - here, each subsample mean is more likely to be close to the true mean of the population than far from it; the shape of the subsample means is approximately Normal
+
+<div id="note">
+Please take some time to explore how the Normal distribution arises naturally out of estimating the mean value of a population, using the link below.
+
+- [4a. Where Does the Normal Distribution Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04a-generate_normal/)
+
+In this session, you can explore the way in which the variation in how we measure a value (or estimate a mean) affects Normal distribution that results.
+</div>
+
+You met a Normal distribution in Notebook 01 ("Why Do We Do Statistics"), and it's reproduced here in Figure \@ref(fig:model-normal)
+
+```{r model-normal, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Normal distribution model (curve) generating those values. The modelled distribution is entirely described by the parameters: mean=10 (µ) and standard deviation=3 (σ). We can see here that the frequency of real data values don't match the curve exactly; the model simplifies our representation of the 'noisy' data. The dashed line represents the mean value of the model, and the dotted lines represents values at +/- one and two standard deviations from the mean."}
+mu = 10                          # define mean of distribution
+sd = 3                           # define standard deviation of distribution
+breaks = seq(0, 20, by=0.4)      # set up the breakpoints between bars in the histogram
+
+dfm_hist = data.frame(vals=rnorm(200, mean=mu, sd=sd))               # create a data frame
+
+p = ggplot(dfm_hist, aes(x=vals))                                    # set up the ggplot with data
+p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                       breaks=breaks,
+                       fill="cornflowerblue")
+p = p + stat_function(fun=dnorm, args=list(mean=mu, sd=sd),          # add a layer with the Normal curve 
+                      geom="line")
+p = p + annotate("segment",                                          # show the mean as a dashed line
+                 x=mu, xend=mu, y=0, yend=0.2,
+                 colour="darkorange1", size=1, linetype="dashed")
+p = p + annotate("segment",                                          # show standard deviations as dotted lines
+                 x=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                 xend=c(mu-2*sd, mu-sd, mu+sd, mu+2*sd),
+                 y=c(0, 0, 0, 0), yend=c(0.2, 0.2, 0.2, 0.2),
+                 colour="goldenrod", size=1, linetype="dotted")
+p = p + annotate("text",                                             # annotate the lines
+                 x=c(mu-2*sd, mu-sd, mu, mu+sd, mu+2*sd),
+                 y=c(0.21, 0.21, 0.21, 0.21, 0.21),
+                 colour="darkorange3",
+                 label=c("µ - 2σ", "µ - σ", "µ", "µ + σ", "µ + 2σ"))
+p = p + xlim(mu - 3 * sd, mu + 3 * sd)                               # set x-axis limits
+p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p                                                                    # show plot
+```
+
+Features of the Normal distribution include that there is a single "peak" (it is unimodel), and this peak occurs at the *mean* value of the distribution (which is also the *median* value of the distribution). The distribution is also symmetrical about the mean.
+
+<div id="note">
+- The *location* of a Normal distribution is described by its mean (µ)
+- The *spread* of a Normal distribution is described by its standard deviation (σ)
+
+The earlier interactive session allowed you to explore the way in which the parameters of a statistical distribution alter its shape, and how well it appears to represent measured data.
+
+- [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01a-sampling/)
+</div>
+
+<div id="warning">
+**Not all data is Normally-distributed.**
+
+You should check all necessary assumptions before performing a statistical test - this often means testing your dataset for "Normality."
+</div>
+
+
+## Testing a dataset for Normality
+
+
+# The Binomial Distribution
+
+```{r model-binom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of trials n=30, and probability of success p=3. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected (mean) value of the model."}
+size = 30
+prob = 0.1
+breaks = 0:20      # set up the breakpoints between bars in the histogram
+
+dfm_hist = data.frame(vals=rbinom(200, size, prob))               # create a data frame
+
+p = ggplot(dfm_hist, aes(x=vals))                                    # set up the ggplot with data
+p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                       dodge=0,
+                       center=0, binwidth=1,
+                       fill="cornflowerblue", color="black")
+p = p + geom_point(data=data.frame(x=breaks, y=dbinom(breaks, size, prob)),
+                   aes(x=x, y=y),
+                   size=7,
+                   color="darkorange3")
+p = p + annotate("segment",                                          # show the expected value as a dashed line
+                 x=size * prob, xend=size * prob,
+                 y=0, yend=0.25,
+                 colour="darkorange1", size=1, linetype="dashed")
+p = p + annotate("text",                                             # annotate the lines
+                 x=size * prob,
+                 y=0.26,
+                 colour="darkorange3",
+                 label=TeX("n$\\times p"))
+p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p                                                                    # show plot
+```
+
+# The Negative Binomial Distribution
+
+```{r model-negbinom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Negative Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of successes n=6, and probability of success p=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected (modal) value of the dustribution."}
+prob = 0.5
+size = 6
+breaks = 0:25      # set up the breakpoints between bars in the histogram
+expect = (size - 1) * prob / (1 - prob)
+
+dfm_hist = data.frame(vals=rnbinom(200, size=size, prob=prob))               # create a data frame
+
+p = ggplot(dfm_hist, aes(x=vals))                                    # set up the ggplot with data
+p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                       dodge=0,
+                       center=0, binwidth=1,
+                       fill="cornflowerblue", color="black")
+p = p + geom_point(data=data.frame(x=breaks,
+                                   y=dnbinom(breaks, size=size, prob=prob)),
+                   aes(x=x, y=y),
+                   size=7,
+                   color="darkorange3")
+p = p + annotate("segment",                                          # show the expected value as a dashed line
+                 x=expect, xend=expect,
+                 y=0, yend=0.19,
+                 colour="darkorange1", size=1, linetype="dashed")
+p = p + annotate("text",                                             # annotate the lines
+                 x=expect,
+                 y=0.2,
+                 colour="darkorange3",
+                 label=TeX("$\\frac{p(n -1)}{1-p}"))
+p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p                                                                    # show plot
+```
+
+
+# The Exponential Distribution
+
+```{r model-exp, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Exponential distribution model (curve) generating those values. The modelled distribution is entirely described by the rate parameter𝛌=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected value of the model (1/𝛌)"}
+lambda = 0.5
+breaks = seq(0, 12, b=0.25)      # set up the breakpoints between bars in the histogram
+expect = 1 / lambda
+
+dfm_hist = data.frame(vals=rexp(200, rate=lambda))               # create a data frame
+
+p = ggplot(dfm_hist, aes(x=vals))                                    # set up the ggplot with data
+p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                       breaks=breaks,
+                       fill="cornflowerblue", color="black")
+p = p + stat_function(fun=dexp, args=list(rate=lambda),          # add a layer with the Normal curve 
+                      geom="line", color="darkorange3",
+                      lwd=2)
+p = p + annotate("segment",                                          # show the expected value as a dashed line
+                 x=expect, xend=expect,
+                 y=0, yend=0.46,
+                 colour="darkorange1", size=1, linetype="dashed")
+p = p + annotate("text",                                             # annotate the lines
+                 x=expect,
+                 y=0.5,
+                 colour="darkorange3",
+                 label=TeX("$\\frac{1}{\\lambda}$"))
+p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p                                                                    # show plot
+```
+
+
+# The Poisson Distribution
+
+```{r model-pois, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Poisson distribution model (dots) generating those values. The modelled distribution is entirely described by the rate parameter𝛌=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected value of the model (𝛌)"}
+lambda = 3
+breaks = 0:15
+expect = lambda
+
+dfm_hist = data.frame(vals=rpois(200, lambda=lambda))               # create a data frame
+
+p = ggplot(dfm_hist, aes(x=vals))                                    # set up the ggplot with data
+p = p + geom_histogram(aes(y=..density..),                           # add a historgram layer
+                       center=0, binwidth=1,
+                       fill="cornflowerblue", color="black")
+p = p + geom_point(data=data.frame(x=breaks,
+                                   y=dpois(breaks, lambda=lambda)),
+                   aes(x=x, y=y),
+                   size=7,
+                   color="darkorange3")
+p = p + annotate("segment",                                          # show the expected value as a dashed line
+                 x=expect, xend=expect,
+                 y=0, yend=0.34,
+                 colour="darkorange1", size=1, linetype="dashed")
+p = p + annotate("text",                                             # annotate the lines
+                 x=expect,
+                 y=0.35,
+                 colour="darkorange3",
+                 label=TeX("$\\lambda$"))
+p = p + xlab("measured variable") + ylab("frequency")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p                                                                    # show plot
+```
