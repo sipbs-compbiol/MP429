@@ -26,13 +26,13 @@ figbg = "whitesmoke"
 - The different distributions you meet represent distinct processes, or alternative measurements of those processes
 - Each distribution represents the expected probability outcome of an infinite number of repeated actions
   - We can model these processes to obtain statistical distributions
-  - Normal distributions represent the expected distribution of an infinite number of measurements of a real value
+  - Normal Distributions represent the expected distribution of an infinite number of measurements of a real value
   - An infinite number of coin tosses produces two distributions
-    - The Binomial Distribution represents how many heads (or tails) we should expect to occur in a certain number of tosses
+    - The Binomial Distribution represents how many heads (or tails) we should expect to occur in a certain number of coin tosses
     - The Negative Binomial Distributions represents how many coin tosses we would expect to make in order to obtain a certain number of heads (or tails)
   - Events occuring at a set average rate produce two distributions
-    - The Exponential Distribution represents the probability that a process will take a certain amount of time to complete
-    - The Poisson Distribution represents the probability that a process will complete a certain number of times in a given period
+    - The Exponential Distribution represents the probability that a process will take a certain amount of time to complete, or that a certain amount of time will elapse between consecutive events
+    - The Poisson Distribution represents the probability that an event will happen a certain number of times in a given period, or something will occur a certain amount of times in a given space
 - **These distributions are used as models of real data, in *parametric tests***
 </div>
 
@@ -50,7 +50,7 @@ This notebook summarises common statistical distributions, and links out to inte
   - These distributions are good for studying trials or tests with binary outcomes (e.g. "success" or "failure")
 
 - Exponential and Poisson distributions are produced when processes take an average amount of time to complete
-  - These distributions are good for studying process that may take a variable amount of time to reach an end point, such as survival data
+  - These distributions are good for studying process that may take a variable amount of time to reach an end point - such as survival data - or produce a variable number of events in a set amount of time, or a predefined region of space.
 </div>
 
 This notebook provides static information, and you will get the most out of it if you follow the links to the interactive examples to see how each distribution can be generated from a simple process.
@@ -58,7 +58,7 @@ This notebook provides static information, and you will get the most out of it i
 
 # The Normal Distribution
 
-The Normal Distribution (also known as the *Gaussian Distribution* or *Bell Curve*) is probably the most common statistical distribution you will meet. Many statistical methods *assume* that the data being fed into them is Normally-distributed (or, at least, that the errors involved in measuring the data that are fed into them are Normally-distributed). Due to the many ways in which Normal distributions can arise, this is often a reasonable assumption to make. Among the ways in which data tends to form a Normal distribution are:
+The Normal Distribution (also known as the *Gaussian Distribution* or *Bell Curve*) is probably the most common statistical distribution you will meet. Many statistical methods *assume* that the data being fed into them is Normally-distributed (or, at least, that the errors involved in measuring the data that are fed into them are Normally-distributed). Due to the many ways in which Normal distributions can arise when we make measurements in experiments, this is often a reasonable assumption to make. Among the ways in which data tends to form a Normal distribution are:
 
 - repeated physical measurements of the same thing
   - here, the errors in measurement are randomly-distributed, but tend to more frequently be close to the true measurement than far from it; the shape made by the repeated measurement is often Normal
@@ -132,26 +132,28 @@ The earlier interactive session allowed you to explore the way in which the para
 You should check all necessary assumptions before performing a statistical test - this often means testing your dataset for "Normality."
 </div>
 
-
-## Testing a dataset for Normality
+<div id="questions">
+1. What other natural processes might correspond to a normal distribution?
+2. Why do you think these processes fit this distribution?
+</div>
 
 
 # The Binomial Distribution
 
-Many other natural random processes are not *continuous*, but instead have discrete outcomes. For instance, a coin toss can be only Heads or Tails - there are no intermediate values. A coin toss is an event that can have only one of two possible outcomes, and many experiments are set up in a similar way, to have an outcome that is either "success" (Heads) or "failure" (Tails). The statistics of coin tosses are a good substitute for the statistics of these kinds of experiments.
+Many other natural random processes (and experimental observations) are not *continuous*, but instead have discrete outcomes. For instance, a coin toss can be only Heads or Tails - there are no intermediate values. Many experiments are set up in a similar way, to have an outcome that is either "success" (Heads) or "failure" (Tails). The statistics of coin tosses are a good substitute for the statistics of these kinds of experiments.
 
 Coin tosses are an example of a *Binomial (two-number) Experiment*, also known as a *Bernoulli Trial*. These kinds of processes have the following properties:
 
-- There are two and only two outcomes for each experiment (or trial). Call these "success" and "failure."
-- The experiment is repeated a number of times, $n$
+- There are two and only two outcomes for each experiment (or trial). Call these "success" and "failure" (though the names are not important; "Heads" and "Tails" will do).
+- The experiment is repeated a certain number of times, $n$
 - Each experiment's results are completely independent of the others (i.e. no individual experiment's result influences any of the others)
-- The probability of any single experiment being a success is represented as $p$, and the probability of failure is $1 = 1 - p$.
+- The probability of any single experiment being a success is represented as $p$, and the probability of failure is $q = 1 - p$.
 
 <div id="note">
 There are two *parameters* for this process: the number of trials $n$, and the probability of success on any individual trial, $p$.
 </div>
 
-For a fair coin, $p = q = 0.5$, and we can flip it $n=30$ times, to obtain three different outcomes, calling `T` for Tails, and `H` for Heads:
+For a fair coin, $p = q = 0.5$, and we can flip it $n=30$ times, to obtain three different runs of trials, calling `T` for Tails, and `H` for Heads:
 
 - `r sample(c("H","T"), size=30, prob=c(0.5, 0.5), replace=TRUE)`
 - `r sample(c("H","T"), size=30, prob=c(0.5, 0.5), replace=TRUE)`
@@ -159,9 +161,9 @@ For a fair coin, $p = q = 0.5$, and we can flip it $n=30$ times, to obtain three
 
 Each of these runs is independent, and gives us a potentially different number of successes (Heads), each time.
 
-The *Binomial Distribution* is the pattern we get if we repeat runs with this number of coin tosses with this fair coin an infinite number of times, and count successes. Figure \@ref(fig:model-binom) shows the binomial distribution for 30 tosses of a fair coin (orange dots), and the pattern we get from 200 runs of tossing that coin 30 times (blue bars).
+The *Binomial Distribution* is the pattern we get if we repeat runs with this number of coin tosses with this fair coin an infinite number of times, and count successes. Figure \@ref(fig:model-binom) shows the binomial distribution for 30 tosses of a fair coin (orange dots), and the pattern we get from 200 runs of tossing such a coin 30 times (blue bars).
 
-```{r model-binom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of trials n=30, and probability of success p=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected (mean) value of the model."}
+```{r model-binom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of trials n=30, and probability of success p=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected mean value of the model."}
 size = 30
 prob = 0.5
 breaks = 0:30      # set up the breakpoints between bars in the histogram
@@ -191,9 +193,23 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
                                              color = figbg))
 p                                                                    # show plot
 ```
+<div id="note">
+Please take some time to explore how the Binomial Distribution arises naturally out of performing many runs of Bernoulli Trials.
+
+- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04b-bernoulli/)
+
+In this session, you can explore the way in which the variation in success probability and number of trials affects these statistical distributions.
+</div>
+
+As you will have seen from the interactive session, the Binomial Distribution can vary in shape, and the mean, median and mode of the distribution can take different values in the same distribution.
 
 <div id="note">
 The Binomial Distribution is *discrete*  - only whole numbers (integers) of successes are produced.
+</div>
+
+<div id="questions">
+1. What other natural processes might correspond to a binomial distribution?
+2. Why do you think these processes fit this distribution?
 </div>
 
 
@@ -212,7 +228,13 @@ There are two *parameters* for this process: the number of failures we're waitin
 **The expected mean and mode values for this distribution are different.**
 </div>
 
-```{r model-negbinom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Negative Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of failures n=6, and probability of success p=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected (mean) value of the distribution."}
+<div id="warning">
+Statistical texts vary in how they define the Negative Binomial Distribution. Some define $p$ as the probability of success; others define it as the probability of failure. Some define $n$ as the number of successess; others as the number of failures. There are also other differences in how this distribution can be derived.
+
+**Take care when reading other texts that you understand their choice of parametrisation.**
+</div>
+
+```{r model-negbinom, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Negative Binomial distribution model (dots) generating those values. The modelled distribution is entirely described by the parameters: number of failures n=6, and probability of success p=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected mean value of the distribution."}
 prob = 0.5
 size = 6
 breaks = 0:25      # set up the breakpoints between bars in the histogram
@@ -245,7 +267,22 @@ p                                                                    # show plot
 ```
 
 <div id="note">
+Please take some time to explore how the Negative Binomial Distribution arises naturally out of performing many runs of Bernoulli Trials.
+
+- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04b-bernoulli/)
+
+In this session, you can explore the way in which the variation in success probability and number of trials affects these statistical distributions.
+</div>
+
+As you will have seen from the interactive session, the Negative Binomial Distribution can take a number of shapes, and the mean, median and mode can be quite different.
+
+<div id="note">
 The Negative Binomial Distribution is *discrete*  - only whole numbers (integers) of successes are produced.
+</div>
+
+<div id="questions">
+1. What other natural processes might correspond to a negative binomial distribution?
+2. Why do you think these processes fit this distribution?
 </div>
 
 # The Exponential Distribution
@@ -262,6 +299,7 @@ Many natural processes may approximate *Poisson processes*, including:
   - e.g. hard drives, or light bulbs
 - customers arriving at a shop
 - the timings of earthquakes
+- arrivals at an A&E department
 - power cuts
 
 Each event is *discrete*, but the distribution of waiting time between events is *continuous* and random, with an average value (the "average rate").
@@ -278,7 +316,7 @@ There is a single parameter for this process: the *rate* at which events occur, 
 </div>
 
 
-```{r model-exp, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Exponential distribution model (curve) generating those values. The modelled distribution is entirely described by the rate parameter𝛌=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected value of the model (1/𝛌)"}
+```{r model-exp, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Exponential distribution model (curve) generating those values. The modelled distribution is entirely described by the rate parameter𝛌=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected mean value of the model (1/𝛌)"}
 lambda = 0.5
 breaks = seq(0, 12, b=0.25)      # set up the breakpoints between bars in the histogram
 expect = 1 / lambda
@@ -308,13 +346,19 @@ p                                                                    # show plot
 ```
 
 <div id="warning">
-The "tail" of the Exponential distribution is long. A distribution with a small average waiting time may still contain several representatives with very long waiting times.
+The "tail" of the Exponential distribution can be quite long. A distribution with a small average waiting time may still contain several representatives with very long waiting times.
 </div>
-
 
 # The Poisson Distribution
 
-```{r model-pois, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Poisson distribution model (dots) generating those values. The modelled distribution is entirely described by the rate parameter𝛌=0.5. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected value of the model (𝛌)"}
+The Poisson Distribution is - as you might have guessed - related to the Exponential distribution. It is produced by the same kind of processes - Poisson processes - but instead of describing the waiting times between successive events, it describes the number of events we would expect to occur in a unit of time.
+
+<div id="note">
+There is a single parameter for this process, and it is the same one as for the Exponential distribution: the average *rate* at which events occur, 𝛌. (You can think of this as the number of events per unit time)
+</div>
+
+
+```{r model-pois, echo=FALSE, fig.cap="Two hundred 'measured' data values (histogram) and the corresponding Poisson distribution model (dots) generating those values. The modelled distribution is entirely described by the rate parameter 𝛌=3. The frequencies of observed data values don't match the curve exactly; as for the Normal distribution the model simplifies our representation of the 'noisy' data. The dashed line represents the expected mean value of the model (𝛌)"}
 lambda = 3
 breaks = 0:15
 expect = lambda
@@ -344,3 +388,21 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
                                              color = figbg))
 p                                                                    # show plot
 ```
+
+<div id="note">
+Please take some time to explore how the Poisson Distribution arises naturally out of an Exponential Distribution.
+
+- [4c. Where Does the Poisson Distribution Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04c-poisson/)
+
+In this session, you can explore the way in which the variation in rate parameter affects both Exponential and Poisson Distributions.
+</div>
+
+<div id="warning">
+The *rate* at which events occur, 𝛌, is a continuous variable, but the Poisson Distribution is **discrete** and describes the counts of events in a unit of time.
+</div>
+
+<div id="warning">
+**Poisson processes are more general than just intervals of time**
+
+We talk about Poisson processes as being a rate per unit *time*, but Poisson processes can also be *spatial* and occur over a unit *length* (like distances between cars in a lane of traffic), *area* (like counts of tourists in George Square at a given point in time), or *volume* (like the number of raisins in a Christmas pudding).
+</div>
