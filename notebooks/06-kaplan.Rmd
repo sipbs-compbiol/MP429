@@ -1,0 +1,178 @@
+---
+title: "The Kaplan-Meier Survival Plot"
+author: "Leighton Pritchard"
+date: "2021 Presentation"
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float:
+      toc_collapsed: false
+    number_sections: true
+    css: "css/rmd_style.css"
+    theme: lumen
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library("dplyr")
+library("DT")
+library("GGally")
+library("ggfortify")
+library("ggplot2")
+library("kableExtra")
+library("knitr")
+library("latex2exp")
+library("scales")
+library("survival")
+
+# BG color for plots - should match .figure and .caption classes in rmd_style.css
+figbg = "whitesmoke"
+```
+
+# Introduction
+
+The *Kaplan-Meier Estimator* or *Kaplan-Meier Survival Plot* is a nonparametric test that estimates the probability that some entity will survive beyond a specified time. It is an example of *survival analysis*, where the response variable is *time until an event occurs*.
+
+<div id="note">
+In biomedical research, we are usually interested in things like patient survival following surgery or treatment, but this kind of analysis is general important for any process that involves the time taken for some event to happen, including:
+
+- time to failure of electronic devices
+- time a player is at bat in baseball
+- time to recovery (or death) from illness
+</div>
+
+There are three main areas of application for survival analysis:
+
+- Estimating *survivor function* and/or *hazard function*
+- Comparing survivor functions and/or hazard functions
+- Understanding the relationship between explanatory variables and survival time.
+
+The Kaplan-Meier test is so widely used because it is nonparametric and can cope well with *censored data* - data where the information is not complete for all individuals. In a biomedical setting, this usually means something like the individual withdraws from the study; the individual is lost from follow-up; or the study ends before the event happens ("right-censoring")
+
+<div id="note">
+Non-parametric tests tend to cope better than parametric tests when data has been censored or otherwise does not conform to strong assumptions about the *shape* of the data (i.e. the statistical model we use in a test to represent the data)
+</div>
+
+## The Survival Function
+
+The survival function represents the probability that an entity (such as a patient) will *survive* beyond a specified time.
+
+Figure \@ref(fig:survival-exp) shows an *exponential* survival function.
+
+```{r survival-exp, echo=FALSE, fig.cap="An expoential survival function. The proportion of entities survivng for more than one month is 0.37"}
+lambda = 1
+breaks = seq(0, 12, b=0.25)      # set up the breakpoints between bars in the histogram
+
+dfm_hist = data.frame(vals=rexp(200, rate=lambda))               # create a data frame
+
+p = ggplot(dfm_hist, aes(x=vals)) + 
+  stat_function(fun=dexp, args=list(rate=lambda), 
+                geom="line", color="darkorange3",
+                lwd=2) +
+  annotate("segment", 
+           x=1, xend=1,
+           y=0, yend=dexp(1),
+           size=1, linetype="dashed") +
+  annotate("segment", 
+           x=0, xend=1,
+           y=dexp(1), yend=dexp(1),
+           size=1, linetype="dashed") +
+  annotate("text",
+           x=1, y=dexp(1),
+           hjust=0, vjust=0,
+           label="(1, 0.37)")
+p = p + xlab("months") + ylab("proportion surviving")                # add axis labels
+p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
+                                             color = figbg))
+p  
+```
+
+<div id="note">
+Survival functions need not be exponential. They can take any form, which is one reason why we might use the Kaplan-Meier approach rather than an Exponential function (such as was described in notebook 04). The Kaplan-Meier method can be applied to any shape of survival function.
+</div>
+
+<div id="questions">
+1. What kinds of processes might give rise to a survival function that is not exponential?
+</div>
+
+# Kaplan-Meier Plots
+
+For a single sample, generating a Kaplan-Meier plot can be quite straightforward. Our dataset should contain three columns: an identifier for each entity (e.g. patient ID), their *serial time*, and their status at the the end of their serial time.
+
+Serial time is the time at which one of the following three things happens:
+
+- the study ends (the entity survives)
+- the event occurs (usually "death")
+- the entity is censored (drops out of the study, is lost, etc.)
+
+<div id="warning">
+Several assumptions are made by Kaplan-Meier plots:
+
+- Censored individuals have the same prospect of survival as individuals who continue to be followed
+- Survival prospects are independent of the date/time an individual is recruited to the study
+- The event recorded (often death) actually happens at the specified time
+</div>
+
+The table below shows survival data for patients with advanced lung cancer, obtained from the North Central Cancer Treatment Group. This is a dataset from the `survival` package in `R`. The data columns are as follows:
+
+- `inst`:	Institution code
+- `time`:	Survival time in days
+- `status`:	censoring status 1=censored, 2=dead
+- `age`:	Age in years
+- `sex`:	Male=1 Female=2
+- `ph.ecog`:	ECOG performance score as rated by the physician. 0=asymptomatic, 1= symptomatic but completely ambulatory, 2= in bed <50% of the day, 3= in bed > 50% of the day but not bedbound, 4 = bedbound
+- `ph.karno`:	Karnofsky performance score (bad=0-good=100) rated by physician
+- `pat.karno`:	Karnofsky performance score as rated by patient
+- `meal.cal`:	Calories consumed at meals
+- `wt.loss`:	Weight loss in last six months
+
+> Loprinzi CL. Laurie JA. Wieand HS. Krook JE. Novotny PJ. Kugler JW. Bartel J. Law M. Bateman M. Klatt NE. *et al.* "Prospective evaluation of prognostic variables from patient-completed questionnaires. North Central Cancer Treatment Group.: Journal of Clinical Oncology. 12(3):601-7, 1994.[https://doi.org/10.1200/jco.1994.12.3.601](https://doi.org/10.1200/jco.1994.12.3.601)
+
+```{r lung-table, echo=FALSE}
+datatable(lung)
+```
+
+Initially, we need only concern ourselves with the institution code (patient ID), survival time, and status at the end of serial time.
+
+```{r lung-fit1, echo=FALSE, fig.cap="Survival function for the complete `lung` dataset, as the solid black line. Censored data is shown by a cross for the corresponding individual, at the time of censoring. The grey ribbon showsthe 95% confidence interval for the survival function. The median time to survival is around 310 days."}
+sf_lung = survfit(Surv(time, status) ~ 1, data=lung)
+p = autoplot(sf_lung) +
+  xlab("days") + ylab("survival") +
+  theme(plot.background = element_rect(fill = figbg,           # colour background
+                                       color = figbg))
+p
+```
+
+## Comparing Kaplan-Meier Curves
+
+The individuals in the `lung` dataset were drawn from more than one sex, recorded as `1` (male) or `2` (female). We can visualise survival curves for the two sexes separately on the same plot.
+
+``````{r lung-fit-sex, echo=FALSE, fig.cap="Survival function for the `lung` dataset, stratified by recorded sex (`1` = Male; `2` = Female). Censored data is shown by a cross for the corresponding individual, at the time of censoring. 95% Confidence Intervals are shown as coloured ribbons. The median survival time (MST) for females is 426 days; for males, MST is 270 days."}
+sf_lung_sex = survfit(Surv(time, status) ~ sex, data=lung)
+p = autoplot(sf_lung_sex) +
+#  guides(breaks=) + 
+#  scale_color_brewer(palette="Set2", breaks=c(1, 2), labels=c("Male", "Female")) +
+  theme(legend.background = element_rect(fill = figbg, color = figbg),
+        plot.background = element_rect(fill = figbg, color = figbg))
+p
+```
+
+Figure \@ref(fig:lung-fit-sex) appears to suggest that, at most timepoints, a smaller proportion of female patients have died than male patients. This suggests that the survival time for female patients is longer than that for male patients. Also, the 95% confidence intervals for the two curves do not appear to overlap, which suggests that the two survival curves are statistically significantly different. But this is just a visual observation. Inspecting the data shows us that the median survival time (MST) is 270 days for males, and 426 days for females.
+
+```{r lung-fit-sex-table, echo=FALSE}
+sf_lung_sex
+```
+
+To test whether the difference between survival curves is significant, we can use the *log rank test* or the *Cox proportional hazards* model. In the output below, the results of the Cox proportional hazards model and log rank tests are shown. This tests whether the survival curves differ for male and female patients.
+
+```{r cox-hazards, echo=FALSE}
+res_cox = coxph(Surv(time, status) ~ sex, data=lung)
+summary(res_cox)
+```
+
+This table describes the result of testing whether the curves for each sex differ. The output can be a little intimidating, but the important points to note are:
+
+- the difference between the curves for the two sexes is statistically significant. In the table `Pr(>|z|) = 0.00149` indicates the P-value, testing against the null hypothesis that the curves are produced by the same underlying survival process.
+- the regression coefficient (`coef`) indicates the relative risk for group `2` (females) compared to group `1` (males); the coefficient is -0.53, which is negative, indicating that females have lower risk of death
+- the *hazard ratio* is shown as the exponent of the regression coefficient: `exp(coef)`. Here, it is 0.59, which means that being female is calculated to reduce risk by 41%. The 95% confidence intervals suggest the reduction in risk is between 18% and 51%.
+- three global significance tests are shown, and each returns a P-value of approximately 0.001, suggesting that there is strong evidence to reject the null hypothesis that the two curves are drawn from the same survival process
