@@ -44,3 +44,5 @@ The current versions of the notebook HTML pages are linked below, for convenienc
 - [3. An Introduction to Data Visualisation](notebooks/03-visualisation.html)
   - [3a. Better Tools Than Bar Charts **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/03a-barchart/)
 - [4. Where Do Statistical Distributions Come From?](notebooks/04-origins.html)
+  - [4a. Where Does the Normal Distribution Come From?](https://leighton-pritchard.shinyapps.io/04a-generate-normal/)
+- [5. Hypothesis Testing](notebooks/05-origins.html)
