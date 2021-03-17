@@ -46,3 +46,4 @@ The current versions of the notebook HTML pages are linked below, for convenienc
 - [4. Where Do Statistical Distributions Come From?](notebooks/04-origins.html)
   - [4a. Where Does the Normal Distribution Come From?](https://mp429.shinyapps.io/04a-generate-normal/)
 - [5. Hypothesis Testing](notebooks/05-origins.html)
+- [6. The Kaplan-Meier Survival Plot](notebooks/06-origins.html)
