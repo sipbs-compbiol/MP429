@@ -38,11 +38,11 @@ Rscript install.R
 The current versions of the notebook HTML pages are linked below, for convenience
 
 - [1. Why Do We Do Statistics?](notebooks/01-statistics.html)
-  - [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01a-sampling/)
-  - [1b. Exploring a Statistical Relationship **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01b-linear/)  
+  - [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://mp429.shinyapps.io/01a-sampling/)
+  - [1b. Exploring a Statistical Relationship **INTERACTIVE SESSION**](https://mp429.shinyapps.io/01b-linear/)  
 - [2. What is a Dataset?](notebooks/02-dataset.html)
 - [3. An Introduction to Data Visualisation](notebooks/03-visualisation.html)
-  - [3a. Better Tools Than Bar Charts **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/03a-barchart/)
+  - [3a. Better Tools Than Bar Charts **INTERACTIVE SESSION**](https://mp429.shinyapps.io/03a-barchart/)
 - [4. Where Do Statistical Distributions Come From?](notebooks/04-origins.html)
-  - [4a. Where Does the Normal Distribution Come From?](https://leighton-pritchard.shinyapps.io/04a-generate-normal/)
+  - [4a. Where Does the Normal Distribution Come From?](https://mp429.shinyapps.io/04a-generate-normal/)
 - [5. Hypothesis Testing](notebooks/05-origins.html)
