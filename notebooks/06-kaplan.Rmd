@@ -34,7 +34,7 @@ figbg = "whitesmoke"
 The *Kaplan-Meier Estimator* or *Kaplan-Meier Survival Plot* is a nonparametric test that estimates the probability that some entity will survive beyond a specified time. It is an example of *survival analysis*, where the response variable is *time until an event occurs*.
 
 <div id="note">
-In biomedical research, we are usually interested in things like patient survival following surgery or treatment, but this kind of analysis is general important for any process that involves the time taken for some event to happen, including:
+In biomedical research, we are usually interested in things like patient survival following surgery or treatment, but this kind of analysis is generally important for any process that involves the time taken for some event to happen, including:
 
 - time to failure of electronic devices
 - time a player is at bat in baseball
@@ -47,7 +47,7 @@ There are three main areas of application for survival analysis:
 - Comparing survivor functions and/or hazard functions
 - Understanding the relationship between explanatory variables and survival time.
 
-The Kaplan-Meier test is so widely used because it is nonparametric and can cope well with *censored data* - data where the information is not complete for all individuals. In a biomedical setting, this usually means something like the individual withdraws from the study; the individual is lost from follow-up; or the study ends before the event happens ("right-censoring")
+The Kaplan-Meier test is so widely used because it is nonparametric and can cope well with *censored data*: data where the information is not complete for all individuals. In a biomedical setting, this usually means something like the individual withdraws from the study, or the individual is lost from follow-up.
 
 <div id="note">
 Non-parametric tests tend to cope better than parametric tests when data has been censored or otherwise does not conform to strong assumptions about the *shape* of the data (i.e. the statistical model we use in a test to represent the data)
