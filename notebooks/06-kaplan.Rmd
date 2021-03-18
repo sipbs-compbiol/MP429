@@ -59,7 +59,7 @@ The survival function represents the probability that an entity (such as a patie
 
 Figure \@ref(fig:survival-exp) shows an *exponential* survival function.
 
-```{r survival-exp, echo=FALSE, fig.cap="An expoential survival function. The proportion of entities survivng for more than one month is 0.37"}
+```{r survival-exp, echo=FALSE, fig.cap="An exponential survival function. The proportion of entities survivng for more than one month is 0.37"}
 lambda = 1
 breaks = seq(0, 12, b=0.25)      # set up the breakpoints between bars in the histogram
 
@@ -134,7 +134,7 @@ datatable(lung)
 
 Initially, we need only concern ourselves with the institution code (patient ID), survival time, and status at the end of serial time.
 
-```{r lung-fit1, echo=FALSE, fig.cap="Survival function for the complete `lung` dataset, as the solid black line. Censored data is shown by a cross for the corresponding individual, at the time of censoring. The grey ribbon showsthe 95% confidence interval for the survival function. The median time to survival is around 310 days."}
+```{r lung-fit1, echo=FALSE, fig.cap="Survival function for the complete `lung` dataset, as the solid black line. Censored data is shown by a cross for the corresponding individual, at the time of censoring. The grey ribbon shows the 95% confidence interval for the survival function. The median time to survival is around 310 days."}
 sf_lung = survfit(Surv(time, status) ~ 1, data=lung)
 p = autoplot(sf_lung) +
   xlab("days") + ylab("survival") +
@@ -157,7 +157,7 @@ p = autoplot(sf_lung_sex) +
 p
 ```
 
-Figure \@ref(fig:lung-fit-sex) appears to suggest that, at most timepoints, a smaller proportion of female patients have died than male patients. This suggests that the survival time for female patients is longer than that for male patients. Also, the 95% confidence intervals for the two curves do not appear to overlap, which suggests that the two survival curves are statistically significantly different. But this is just a visual observation. Inspecting the data shows us that the median survival time (MST) is 270 days for males, and 426 days for females.
+Figure \@ref(fig:lung-fit-sex) appears to suggest that, at most timepoints, a smaller proportion of female patients have died than male patients. This suggests that the survival time for female patients is longer than that for male patients. Also, the 95% confidence intervals for the two curves do not appear to overlap considerably, which suggests that the two survival curves may be statistically significantly different. But this is just a visual observation. Inspecting the data shows us that the median survival time (MST) is 270 days for males, and 426 days for females, and the 95% confidence intervals for this estimate do not overlap. This supports our contention that the average survival for the two sexes differs.
 
 ```{r lung-fit-sex-table, echo=FALSE}
 sf_lung_sex
@@ -174,5 +174,5 @@ This table describes the result of testing whether the curves for each sex diffe
 
 - the difference between the curves for the two sexes is statistically significant. In the table `Pr(>|z|) = 0.00149` indicates the P-value, testing against the null hypothesis that the curves are produced by the same underlying survival process.
 - the regression coefficient (`coef`) indicates the relative risk for group `2` (females) compared to group `1` (males); the coefficient is -0.53, which is negative, indicating that females have lower risk of death
-- the *hazard ratio* is shown as the exponent of the regression coefficient: `exp(coef)`. Here, it is 0.59, which means that being female is calculated to reduce risk by 41%. The 95% confidence intervals suggest the reduction in risk is between 18% and 51%.
+- the *hazard ratio* is shown as the exponent of the regression coefficient: `exp(coef)`. Here, it is 0.59, which means that being female is calculated to reduce risk by 41%. The 95% confidence intervals suggest the reduction in risk is probably between 18% and 58%.
 - three global significance tests are shown, and each returns a P-value of approximately 0.001, suggesting that there is strong evidence to reject the null hypothesis that the two curves are drawn from the same survival process
