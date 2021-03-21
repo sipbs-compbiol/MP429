@@ -353,8 +353,7 @@ plot_regression = function(){
     geom_smooth(method="lm", level=0) +
     geom_text(data=df_text,
               mapping=aes(label=label, x=-Inf, y=11),
-              hjust=-0.1, vjust=-1,
-              size=5) +
+              hjust=-0.1, vjust=-1) +
     facet_wrap(~cohort, ncol=2)
 }
 
@@ -364,8 +363,7 @@ plot_ribbon = function(){
     geom_smooth(method="lm") +
     geom_text(data=df_text,
               mapping=aes(label=label, x=-Inf, y=11),
-              hjust=-0.1, vjust=-1,
-              size=5) +
+              hjust=-0.1, vjust=-1) +
     facet_wrap(~cohort, ncol=2)
 }
 
@@ -382,8 +380,7 @@ plot_regscat = function(){
     geom_point(size=5, alpha=0.7) +
     geom_text(data=df_text,
               mapping=aes(label=label, x=-Inf, y=11),
-              hjust=-0.1, vjust=-1,
-              size=5) +
+              hjust=-0.1, vjust=-1) +
     facet_wrap(~cohort, ncol=2)
 }
 
@@ -393,8 +390,7 @@ plot_regribscat = function(){
     geom_point(size=5, alpha=0.7) +
     geom_text(data=df_text,
               mapping=aes(label=label, x=-Inf, y=11),
-              hjust=-0.1, vjust=-1,
-              size=5) +
+              hjust=-0.1, vjust=-1) +
     facet_wrap(~cohort, ncol=2)
 }
 
