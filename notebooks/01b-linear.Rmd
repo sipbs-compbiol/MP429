@@ -79,7 +79,7 @@ p = p + annotate("text",                                             # annotate 
                  colour="darkorange3",
                  label=paste("gradient = ", format(round(m_coeff, 2), nsmall=2),
                              ", intercept = ", format(round(c_coeff, 2), nsmall=2)))
-p = p + xlab("explantory variable") + ylab("response variable")        # add axis labels
+p = p + xlab("explanatory variable") + ylab("response variable")        # add axis labels
 p = p + theme(plot.background = element_rect(fill = figbg,           # colour background
                                              color = figbg))
 
