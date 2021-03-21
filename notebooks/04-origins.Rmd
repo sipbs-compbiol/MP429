@@ -193,15 +193,8 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
                                              color = figbg))
 p                                                                    # show plot
 ```
-<div id="note">
-Please take some time to explore how the Binomial Distribution arises naturally out of performing many runs of Bernoulli Trials.
 
-- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://mp429.shinyapps.io/04b-bernoulli/)
-
-In this session, you can explore the way in which the variation in success probability and number of trials affects these statistical distributions.
-</div>
-
-As you will have seen from the interactive session, the Binomial Distribution can vary in shape, and the mean, median and mode of the distribution can take different values in the same distribution.
+The Binomial Distribution can vary in shape, and the mean, median and mode of the distribution can take different values in the same distribution.
 
 <div id="note">
 The Binomial Distribution is *discrete*  - only whole numbers (integers) of successes are produced.
@@ -266,15 +259,7 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
 p                                                                    # show plot
 ```
 
-<div id="note">
-Please take some time to explore how the Negative Binomial Distribution arises naturally out of performing many runs of Bernoulli Trials.
-
-- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://mp429.shinyapps.io/04b-bernoulli/)
-
-In this session, you can explore the way in which the variation in success probability and number of trials affects these statistical distributions.
-</div>
-
-As you will have seen from the interactive session, the Negative Binomial Distribution can take a number of shapes, and the mean, median and mode can be quite different.
+The Negative Binomial Distribution can take a number of shapes, and the mean, median and mode can be quite different, even in the same distribution.
 
 <div id="note">
 The Negative Binomial Distribution is *discrete*  - only whole numbers (integers) of successes are produced.
@@ -388,14 +373,6 @@ p = p + theme(plot.background = element_rect(fill = figbg,           # colour ba
                                              color = figbg))
 p                                                                    # show plot
 ```
-
-<div id="note">
-Please take some time to explore how the Poisson Distribution arises naturally out of an Exponential Distribution.
-
-- [4c. Where Does the Poisson Distribution Come From? **INTERACTIVE SESSION**](https://mp429.shinyapps.io/04c-poisson/)
-
-In this session, you can explore the way in which the variation in rate parameter affects both Exponential and Poisson Distributions.
-</div>
 
 <div id="warning">
 The *rate* at which events occur, 𝛌, is a continuous variable, but the Poisson Distribution is **discrete** and describes the counts of events in a unit of time.
