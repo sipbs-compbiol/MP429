@@ -68,7 +68,7 @@ The Normal Distribution (also known as the *Gaussian Distribution* or *Bell Curv
 <div id="note">
 Please take some time to explore how the Normal distribution arises naturally out of estimating the mean value of a population, using the link below.
 
-- [4a. Where Does the Normal Distribution Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04a-generate_normal/)
+- [4a. Where Does the Normal Distribution Come From? **INTERACTIVE SESSION**](https://mp429.shinyapps.io/04a-generate_normal/)
 
 In this session, you can explore the way in which the variation in how we measure a value (or estimate a mean) affects Normal distribution that results.
 </div>
@@ -123,7 +123,7 @@ Important features of the Normal distribution include:
 
 The earlier interactive session allowed you to explore the way in which the parameters of a statistical distribution alter its shape, and how well it appears to represent observed data.
 
-- [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/01a-sampling/)
+- [1a. Exploring a Statistical Distribution **INTERACTIVE SESSION**](https://mp429.shinyapps.io/01a-sampling/)
 </div>
 
 <div id="warning">
@@ -196,7 +196,7 @@ p                                                                    # show plot
 <div id="note">
 Please take some time to explore how the Binomial Distribution arises naturally out of performing many runs of Bernoulli Trials.
 
-- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04b-bernoulli/)
+- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://mp429.shinyapps.io/04b-bernoulli/)
 
 In this session, you can explore the way in which the variation in success probability and number of trials affects these statistical distributions.
 </div>
@@ -269,7 +269,7 @@ p                                                                    # show plot
 <div id="note">
 Please take some time to explore how the Negative Binomial Distribution arises naturally out of performing many runs of Bernoulli Trials.
 
-- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04b-bernoulli/)
+- [4b. Where Do the Binomial and Negative Binomial Distributions Come From? **INTERACTIVE SESSION**](https://mp429.shinyapps.io/04b-bernoulli/)
 
 In this session, you can explore the way in which the variation in success probability and number of trials affects these statistical distributions.
 </div>
@@ -392,7 +392,7 @@ p                                                                    # show plot
 <div id="note">
 Please take some time to explore how the Poisson Distribution arises naturally out of an Exponential Distribution.
 
-- [4c. Where Does the Poisson Distribution Come From? **INTERACTIVE SESSION**](https://leighton-pritchard.shinyapps.io/04c-poisson/)
+- [4c. Where Does the Poisson Distribution Come From? **INTERACTIVE SESSION**](https://mp429.shinyapps.io/04c-poisson/)
 
 In this session, you can explore the way in which the variation in rate parameter affects both Exponential and Poisson Distributions.
 </div>
