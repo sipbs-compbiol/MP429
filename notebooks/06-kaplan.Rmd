@@ -1,7 +1,7 @@
 ---
 title: "The Kaplan-Meier Survival Plot"
 author: "Leighton Pritchard"
-date: "2021 Presentation"
+date: "2022 Presentation"
 output: 
   bookdown::html_document2:
     toc: true
